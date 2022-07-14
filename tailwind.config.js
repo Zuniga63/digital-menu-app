@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
-// eslint-disable-next-line import/no-extraneous-dependencies
 const defaultTheme = require('tailwindcss/defaultTheme');
+const prettier = require('prettier-plugin-tailwindcss');
 
 module.exports = {
   content: [
@@ -11,8 +11,9 @@ module.exports = {
     extend: {
       fontFamily: {
         sans: ['Roboto', 'sans-serif', ...defaultTheme.fontFamily.sans],
+        display: ['Zen Dots', 'cursive', ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  plugins: [],
+  plugins: [prettier],
 };
