@@ -1,8 +1,8 @@
 import { useAppDispatch } from 'store/hooks';
 import { hideNavMenu } from 'store/reducers/NavMenuReducer/actionCreators';
-import BrandLogo from './BrandLogo';
-import BrandName from './BrandName';
-import BurgerToggler from './BurgerToggler';
+import BrandLogo from '../BrandLogo';
+import BrandName from '../BrandName';
+import BurgerToggler from '../BurgerToggler';
 
 export default function Header() {
   const dispatch = useAppDispatch();
