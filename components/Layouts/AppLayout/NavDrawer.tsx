@@ -1,4 +1,5 @@
 import { Drawer } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import {
   hideNavMenu,
@@ -9,6 +10,7 @@ import Header from './Header';
 export default function NavDrawer() {
   const { menuIsOpen } = useAppSelector(({ NavMenuReducer }) => NavMenuReducer);
   const dispatch = useAppDispatch();
+  const largeScreen = useMediaQuery('(min-width: 768px)');
   const toggle = () => {
     if (menuIsOpen) {
       dispatch(hideNavMenu());
@@ -22,7 +24,7 @@ export default function NavDrawer() {
       opened={menuIsOpen}
       onClose={toggle}
       padding={0}
-      size="md"
+      size={largeScreen ? 'md' : '100%'}
       withCloseButton={false}
     >
       <Header />
