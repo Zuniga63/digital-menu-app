@@ -6,12 +6,14 @@ import {
 } from 'redux';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
-import thunkMiddleware, { ThunkDispatch } from 'redux-thunk';
+import thunkMiddleware, { ThunkDispatch, ThunkAction } from 'redux-thunk';
 import { createWrapper } from 'next-redux-wrapper';
 
 import NavMenuReducer from './reducers/NavMenuReducer';
+import CategoryReducer from './reducers/CategoryReducer';
+import { IAction } from './reducers/interfaces';
 
-const rootReducer = combineReducers({ NavMenuReducer });
+const rootReducer = combineReducers({ NavMenuReducer, CategoryReducer });
 
 export const store = createStore(
   rootReducer,
@@ -23,3 +25,8 @@ export const wrapper = createWrapper(makeStore);
 
 export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = ThunkDispatch<unknown, unknown, AnyAction>;
+export type AppThunkAction = ThunkAction<void, unknown, unknown, AnyAction>;
+export const actionBody = (type: string, payload?: any): IAction => ({
+  type,
+  payload,
+});
