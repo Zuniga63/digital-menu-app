@@ -1,10 +1,12 @@
 import type { NextPage } from 'next';
-import AdminLayout from 'components/Layouts/AdminLayout';
-import PlusButtom from 'components/PlusButton';
 import { useState, useEffect } from 'react';
-import ModalForm from 'components/CategoryPage/CategoryModalForm';
 import { getAllCategories } from 'store/reducers/CategoryReducer/actionCreators';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+
+import AdminLayout from 'components/Layouts/AdminLayout';
+import PlusButtom from 'components/PlusButton';
+import ModalForm from 'components/CategoryPage/CategoryModalForm';
+import LayoutHeader from 'components/LayoutHeader';
 
 const CategoriesPage: NextPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -34,9 +36,7 @@ const CategoriesPage: NextPage = () => {
   return (
     <>
       <AdminLayout title="Categorías">
-        <h1 className="mb-4 text-center text-3xl font-bold text-gray-800">
-          Listado de categorías
-        </h1>
+        <LayoutHeader>Listado de categorías</LayoutHeader>
 
         <div className="flex flex-col gap-2">
           {(loading || isEmpty) && waiting}
