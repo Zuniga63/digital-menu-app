@@ -42,12 +42,12 @@ export default function CategoryForm({ onCloseModal }: Props) {
 
   const resetForm = () => {
     if (!loading) {
+      if (onCloseModal) onCloseModal();
       setName('');
       setDescription('');
       setImage(null);
       setImagePreview('');
       setIsEnabled(true);
-      if (onCloseModal) onCloseModal();
 
       dispatch(resetStoreState());
     }

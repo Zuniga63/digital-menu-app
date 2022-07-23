@@ -11,7 +11,7 @@ export default function CategoryModalForm({
 }: ModalProps) {
   return (
     <Modal opened={opened} onClose={onClose}>
-      <CategoryForm className="-mt-11" onCloseModal={onClose} />
+      <CategoryForm onCloseModal={onClose} />
     </Modal>
   );
 }

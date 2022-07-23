@@ -6,24 +6,36 @@ import { actionBody, AppThunkAction } from 'store';
 
 import {
   ADD_CATEGORY,
+  REMOVE_CATEGORY,
   RESET_STORE_STATE,
   SET_ALL_CATEGORIES,
+  SET_DELETE_ERROR,
+  SET_DELETE_IS_SUCCESS,
+  SET_DELETE_LOADING,
   SET_LOADING,
+  SET_RELOAD,
   SET_STORE_ERROR,
   SET_STORE_IS_SUCCESS,
   SET_STORE_LOADING,
 } from './actions';
+import { ICategory } from '../interfaces';
 
-const api = process.env.NEXT_PUBLIC_URL_API;
+const baseUrl = '/product-categories';
+
+export interface IAllCategoriesResponse {
+  ok: boolean;
+  categories: ICategory[];
+}
 
 // eslint-disable-next-line import/prefer-default-export
 export const getAllCategories = (): AppThunkAction => {
   return async (dispatch) => {
     try {
       dispatch(actionBody(SET_LOADING, true));
-      const url = `${api}/product-categories`;
+      const url = `${baseUrl}`;
       const res = await axios.get(url);
-      const { categories, ok } = res.data;
+      const { categories, ok }: IAllCategoriesResponse = res.data;
+
       if (ok) {
         dispatch(actionBody(SET_ALL_CATEGORIES, categories));
       }
@@ -48,7 +60,7 @@ export const storeCategory = (formData: FormData): AppThunkAction => {
   return async (dispatch) => {
     try {
       dispatch(actionBody(SET_STORE_LOADING, true));
-      const url = `${api}/product-categories`;
+      const url = `${baseUrl}`;
 
       const res = await axios.post(url, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -84,4 +96,47 @@ export const storeCategory = (formData: FormData): AppThunkAction => {
 
 export const resetStoreState = () => (dispatch: Dispatch) => {
   return dispatch(actionBody(RESET_STORE_STATE));
+};
+
+export const deleteCategory = (categoryId: string): AppThunkAction => {
+  return async (dispatch) => {
+    const url = `${baseUrl}/${categoryId}`;
+    let isOk = false;
+
+    try {
+      dispatch(actionBody(SET_DELETE_LOADING, categoryId));
+      const res = await axios.delete(url);
+      if (res.data.ok) {
+        isOk = true;
+        dispatch(actionBody(SET_DELETE_IS_SUCCESS, true));
+      }
+    } catch (error: any) {
+      const { response, request } = error;
+
+      if (response) {
+        const { data, status } = response;
+        console.log(data, status, typeof status);
+        dispatch(actionBody(SET_DELETE_ERROR, data?.message));
+        if (status === 404) {
+          console.log('reload');
+          dispatch(actionBody(SET_RELOAD, true));
+        }
+      } else if (request) {
+        toast.error('Error al realizar la petición HTTP');
+        console.error(request);
+      } else {
+        toast.error('Error desconocido al lanzar la petición.');
+        console.error(error);
+      }
+    } finally {
+      setTimeout(() => {
+        if (isOk) {
+          dispatch(actionBody(REMOVE_CATEGORY, categoryId));
+        }
+        dispatch(actionBody(SET_DELETE_LOADING, ''));
+        dispatch(actionBody(SET_DELETE_ERROR, ''));
+        dispatch(actionBody(SET_DELETE_IS_SUCCESS, false));
+      }, 1000);
+    }
+  };
 };

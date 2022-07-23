@@ -7,12 +7,14 @@ import AdminLayout from 'components/Layouts/AdminLayout';
 import PlusButtom from 'components/PlusButton';
 import ModalForm from 'components/CategoryPage/CategoryModalForm';
 import LayoutHeader from 'components/LayoutHeader';
+import CategoryCard from 'components/CategoryPage/CategoryCard';
 
 const CategoriesPage: NextPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
-  const { loading, storeLoading, categories } = useAppSelector(
+  const { loading, storeLoading, categories, reload } = useAppSelector(
     ({ CategoryReducer }) => CategoryReducer
   );
+
   const dispatch = useAppDispatch();
   const isEmpty = !loading && !categories.length;
 
@@ -26,6 +28,12 @@ const CategoriesPage: NextPage = () => {
     dispatch(getAllCategories());
   }, []);
 
+  useEffect(() => {
+    if (reload) {
+      dispatch(getAllCategories());
+    }
+  }, [reload]);
+
   const waiting = (
     <p className="text-center text-sm text-gray-400">
       {loading && <span className="animate-pulse">Cargando datos...</span>}
@@ -33,23 +41,18 @@ const CategoriesPage: NextPage = () => {
     </p>
   );
 
+  const categoryCards = categories.map((item) => (
+    <CategoryCard key={item.id} category={item} />
+  ));
+
   return (
     <>
       <AdminLayout title="Categorías">
         <LayoutHeader>Listado de categorías</LayoutHeader>
 
-        <div className="flex flex-col gap-2">
+        <div className="mb-40 flex flex-col gap-2">
           {(loading || isEmpty) && waiting}
-
-          {!isEmpty &&
-            categories.map((item) => (
-              <div className="border" key={item.id}>
-                <p>Nombre: {item.name}</p>
-                <p>Imagen: {item.image ? 'si' : 'no'}</p>
-                <p>Descripción: {item.description}</p>
-                <p>Productos: {item.products.length}</p>
-              </div>
-            ))}
+          {!isEmpty && !loading && categoryCards}
         </div>
       </AdminLayout>
 
