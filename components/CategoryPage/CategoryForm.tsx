@@ -3,16 +3,13 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { toast } from 'react-toastify';
 
-import {
-  resetStoreState,
-  storeCategory,
-} from 'store/reducers/CategoryReducer/actionCreators';
+import { resetStoreState, storeCategory } from 'store/reducers/CategoryReducer/actionCreators';
 
 import Image from 'next/image';
 import { InputWrapper, Input, Textarea, Checkbox } from '@mantine/core';
 import { Trash, Database } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
-import CustomImageDropzone from './CustomImageDropzone';
+import CustomImageDropzone from '../CustomImageDropzone';
 
 interface Props {
   onCloseModal?(): void;
@@ -93,11 +90,7 @@ export default function CategoryForm({ onCloseModal }: Props) {
         {/* Image */}
         {imagePreview ? (
           <div className="relative block h-60 w-full">
-            <Image
-              src={imagePreview}
-              layout="fill"
-              className="object-scale-down"
-            />
+            <Image src={imagePreview} layout="fill" className="object-scale-down" />
 
             <button
               type="button"
@@ -108,10 +101,7 @@ export default function CategoryForm({ onCloseModal }: Props) {
             </button>
           </div>
         ) : (
-          <CustomImageDropzone
-            setFile={setImage}
-            setPreview={setImagePreview}
-          />
+          <CustomImageDropzone setFile={setImage} setPreview={setImagePreview} />
         )}
 
         {/* Name */}
@@ -126,9 +116,7 @@ export default function CategoryForm({ onCloseModal }: Props) {
             id="category-name"
             placeholder="Escribelo aquí."
             value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setName(e.target.value)
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             disabled={loading}
             invalid={validations?.name}
             required
@@ -140,9 +128,7 @@ export default function CategoryForm({ onCloseModal }: Props) {
           label="Descripción"
           placeholder="Tu descripción."
           value={description}
-          onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-            setDescription(e.currentTarget.value)
-          }
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setDescription(e.currentTarget.value)}
           disabled={loading}
           error={validations?.description?.message}
         />
@@ -151,9 +137,7 @@ export default function CategoryForm({ onCloseModal }: Props) {
         <Checkbox
           label="¿Habilitado?"
           checked={isEnabled}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setIsEnabled(e.currentTarget.checked)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setIsEnabled(e.currentTarget.checked)}
           className="font-sans"
           classNames={{
             label: 'font-sans',
