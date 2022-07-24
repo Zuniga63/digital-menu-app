@@ -49,7 +49,10 @@ const Home: NextPage<Props> = ({ categories }: Props) => (
             </header>
             <div className="bg-gray-100">
               {item.products.map((product: any) => (
-                <div className="product relative grid grid-cols-auto-fr gap-2 border-b border-gray-500 pt-8 pb-4 pr-4 pl-2">
+                <div
+                  className="product relative grid grid-cols-auto-fr gap-2 border-b border-gray-500 pt-8 pb-4 pr-4 pl-2"
+                  key={product.id}
+                >
                   <figure className="product__fig  relative z-0 m-0 h-24 w-24 overflow-hidden rounded-lg border border-gray-500">
                     <Image src={product.image.url} alt={product.name} layout="fill" />
                   </figure>
