@@ -1,3 +1,4 @@
+/* eslint-disable default-param-last */
 import { IAction, ICategory } from '../interfaces';
 import {
   ADD_CATEGORY,
@@ -40,11 +41,7 @@ const initialState: ICategoryState = {
   reload: false,
 };
 
-export default function CategoryReducer(
-  // eslint-disable-next-line default-param-last
-  state = initialState,
-  action: IAction
-): ICategoryState {
+export default function CategoryReducer(state = initialState, action: IAction): ICategoryState {
   switch (action.type) {
     case SET_LOADING:
       return {
@@ -102,9 +99,7 @@ export default function CategoryReducer(
         deleteError: action.payload,
       };
     case REMOVE_CATEGORY: {
-      const filter = state.categories.filter(
-        (item) => item.id !== action.payload
-      );
+      const filter = state.categories.filter((item) => item.id !== action.payload);
 
       return {
         ...state,

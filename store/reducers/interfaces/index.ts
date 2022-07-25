@@ -19,6 +19,18 @@ export interface IImage {
   url: string;
 }
 
+export interface IUser {
+  name: string;
+  email: string;
+  role: string;
+  profilePhoto?: IImage;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
+}
+
 export interface ICategory {
   id: string;
   name: string;
