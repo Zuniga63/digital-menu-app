@@ -1,11 +1,4 @@
-import React, {
-  ChangeEvent,
-  Dispatch,
-  FormEvent,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react';
+import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -29,13 +22,7 @@ export interface IOptionItem {
   isEnabled: boolean;
 }
 
-export default function OptionSetForm({
-  loading,
-  apiUrl,
-  setLoading,
-  onCloseModal,
-  onSuccess,
-}: Props) {
+export default function OptionSetForm({ loading, apiUrl, setLoading, onCloseModal, onSuccess }: Props) {
   const [name, setName] = useState('');
   const [isEnabled, setIsEnabled] = useState(true);
 
@@ -69,9 +56,7 @@ export default function OptionSetForm({
     setOptionItems([...filter]);
   };
 
-  const onSubmitHandled = async (
-    event: FormEvent<HTMLFormElement>
-  ): Promise<void> => {
+  const onSubmitHandled = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     try {
       setLoading(true);
@@ -122,19 +107,12 @@ export default function OptionSetForm({
     >
       <>
         {/* Name */}
-        <InputWrapper
-          id="category-name"
-          required
-          label="Nombre del Set"
-          error={errors?.name?.message}
-        >
+        <InputWrapper id="category-name" required label="Nombre del Set" error={errors?.name?.message}>
           <Input
             id="category-name"
             placeholder="Escribelo aquí."
             value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setName(e.target.value)
-            }
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
             disabled={loading}
             invalid={errors?.name}
             required
@@ -145,17 +123,13 @@ export default function OptionSetForm({
         <Checkbox
           label="¿Habilitado?"
           checked={isEnabled}
-          onChange={(e: ChangeEvent<HTMLInputElement>) =>
-            setIsEnabled(e.currentTarget.checked)
-          }
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setIsEnabled(e.currentTarget.checked)}
           disabled={loading}
         />
 
         {/* Items */}
         <div className="rounded-md border border-blue-700 bg-indigo-100 p-2">
-          <h2 className="mb-2 text-center text-lg font-bold tracking-wider text-gray-800">
-            Listado de opciones
-          </h2>
+          <h2 className="mb-2 text-center text-lg font-bold tracking-wider text-gray-800">Listado de opciones</h2>
           <div className="mb-4 flex items-center justify-between gap-2 rounded bg-indigo-200 bg-opacity-60 p-3 shadow shadow-indigo-400">
             <div className="flex flex-grow flex-col gap-4">
               <InputWrapper id="category-name" label="Nombre de la optción">
@@ -163,18 +137,14 @@ export default function OptionSetForm({
                   id="category-name"
                   placeholder="Escribelo aquí."
                   value={itemName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    setItemName(e.target.value)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setItemName(e.target.value)}
                 />
               </InputWrapper>
 
               <Checkbox
                 label="¿Habilitado?"
                 checked={itemIsEnabled}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setItemIsEnabled(e.currentTarget.checked)
-                }
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setItemIsEnabled(e.currentTarget.checked)}
                 disabled={loading}
               />
             </div>
@@ -192,11 +162,7 @@ export default function OptionSetForm({
           <div className="rounded-sm bg-white p-3">
             <ul className="flex h-40 flex-col gap-2 overflow-y-auto">
               {optionItems.map((item) => (
-                <OptionItemCard
-                  item={item}
-                  onRemove={removeItem}
-                  key={item.id}
-                />
+                <OptionItemCard item={item} onRemove={removeItem} key={item.id} />
               ))}
             </ul>
           </div>

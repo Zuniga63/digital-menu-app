@@ -75,8 +75,7 @@ const OptionSetsPage: NextPage = () => {
     const fetch = async () => {
       try {
         const res = await axios.get(apiUrl);
-        const { data }: { data: { ok: boolean; optionSets: IOptionSet[] } } =
-          res;
+        const { data }: { data: { ok: boolean; optionSets: IOptionSet[] } } = res;
         if (data.ok) {
           if (data.optionSets) {
             setOptionSets([...data.optionSets]);
@@ -97,12 +96,7 @@ const OptionSetsPage: NextPage = () => {
 
         <div className="flex flex-col gap-y-6 px-4">
           {optionSets.map((item) => (
-            <OptionSetCard
-              key={item.id}
-              optionSet={item}
-              deleteLoading={deleteLoading}
-              onDelete={deleteOptionSet}
-            />
+            <OptionSetCard key={item.id} optionSet={item} deleteLoading={deleteLoading} onDelete={deleteOptionSet} />
           ))}
         </div>
       </AdminLayout>

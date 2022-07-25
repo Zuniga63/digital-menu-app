@@ -102,13 +102,13 @@ export default function CategoryReducer(
         deleteError: action.payload,
       };
     case REMOVE_CATEGORY: {
-      /* const filter = state.categories.filter(
+      const filter = state.categories.filter(
         (item) => item.id !== action.payload
-      ); */
+      );
 
       return {
         ...state,
-        categories: [],
+        categories: [...filter],
       };
     }
     case SET_RELOAD:
