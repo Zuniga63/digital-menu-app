@@ -98,3 +98,78 @@ export interface IAllProductsResponse {
   ok: boolean;
   products: IProduct[];
 }
+
+//--------------------------------------------------------
+// INTERFACES FOR HOME
+//--------------------------------------------------------
+export interface IProductOptionItemHome {
+  id: string;
+  product: string;
+  optionSet: string;
+  optionSetItem: string;
+  price?: number;
+  order: number;
+  published: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface IProductOptionSetHome {
+  id: string;
+  product: string;
+  optionSet: string;
+  items: IProductOptionItemHome[];
+  title: string;
+  required: boolean;
+  multiple: boolean;
+  minCount?: number;
+  maxCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface IProductHome {
+  id: string;
+  category: string;
+  optionSets: IProductOptionSetHome[];
+  optionSetItems: string[];
+  name: string;
+  slug: string;
+  description?: string;
+  image?: IImage;
+  price: number;
+  hasDiscount: boolean;
+  priceWithDiscount?: number;
+  isNew: boolean;
+  hasVariant: boolean;
+  varianTitle?: string;
+  published: boolean;
+  views: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface ICategoryHome {
+  id: string;
+  name: string;
+  image?: IImage;
+  description?: string;
+  order: number;
+  products: IProductHome[];
+  isEnabled: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface IHomeResponse {
+  ok: boolean;
+  categories: ICategoryHome[];
+}
