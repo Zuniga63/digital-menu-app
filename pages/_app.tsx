@@ -2,6 +2,7 @@
 import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+import axios from 'axios';
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
 
@@ -11,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import { store, wrapper } from '../store';
 
 function MyApp({ Component, pageProps }: AppProps) {
+  axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
   return (
     <Provider store={store}>
       <MantineProvider

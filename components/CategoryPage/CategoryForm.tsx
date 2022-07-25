@@ -9,15 +9,15 @@ import {
 } from 'store/reducers/CategoryReducer/actionCreators';
 
 import Image from 'next/image';
-import { InputWrapper, Input, Textarea, Checkbox, Button } from '@mantine/core';
+import { InputWrapper, Input, Textarea, Checkbox } from '@mantine/core';
 import { Trash, Database } from 'tabler-icons-react';
+import CustomForm from 'components/CustomForm';
 import CustomImageDropzone from './CustomImageDropzone';
 
 interface Props {
-  className?: string;
   onCloseModal?(): void;
 }
-export default function CategoryForm({ className, onCloseModal }: Props) {
+export default function CategoryForm({ onCloseModal }: Props) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null | undefined>(null);
@@ -82,14 +82,14 @@ export default function CategoryForm({ className, onCloseModal }: Props) {
   }, [success]);
 
   return (
-    <form className={className} onSubmit={onSubmitHandled}>
-      <header className="mb-6">
-        <h2 className="text-center text-2xl font-bold text-gray-800">
-          Registrar Categoría
-        </h2>
-      </header>
-
-      <div className="mb-6 flex flex-col gap-4">
+    <CustomForm
+      title="Registrar Categoría"
+      loading={loading}
+      onCancel={resetForm}
+      onSubmit={onSubmitHandled}
+      successButtonIcon={<Database />}
+    >
+      <>
         {/* Image */}
         {imagePreview ? (
           <div className="relative block h-60 w-full">
@@ -160,28 +160,7 @@ export default function CategoryForm({ className, onCloseModal }: Props) {
           }}
           disabled={loading}
         />
-      </div>
-
-      <footer className="flex justify-between">
-        <Button
-          type="button"
-          onClick={resetForm}
-          color="red"
-          className="bg-inherit"
-          disabled={loading}
-        >
-          Cancelar
-        </Button>
-
-        <Button
-          type="submit"
-          leftIcon={<Database />}
-          disabled={loading}
-          loading={loading}
-        >
-          Registrar
-        </Button>
-      </footer>
-    </form>
+      </>
+    </CustomForm>
   );
 }
