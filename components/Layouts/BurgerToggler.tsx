@@ -1,9 +1,6 @@
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { Burger, useMantineTheme } from '@mantine/core';
-import {
-  hideNavMenu,
-  showMenu,
-} from 'store/reducers/NavMenuReducer/actionCreators';
+import { hideNavMenu, showMenu } from 'store/reducers/NavMenuReducer/actionCreators';
 
 export default function BurgerToggler() {
   const { menuIsOpen } = useAppSelector(({ NavMenuReducer }) => NavMenuReducer);
@@ -18,12 +15,5 @@ export default function BurgerToggler() {
       dispatch(showMenu());
     }
   };
-  return (
-    <Burger
-      opened={menuIsOpen}
-      onClick={toggle}
-      title={title}
-      color={theme.colors.gray[2]}
-    />
-  );
+  return <Burger opened={menuIsOpen} onClick={toggle} title={title} color={theme.colors.gray[2]} />;
 }

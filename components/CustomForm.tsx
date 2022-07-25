@@ -29,22 +29,11 @@ export default function CustomForm({
       <div className="mb-6 flex flex-col gap-4">{children}</div>
 
       <footer className="flex justify-between">
-        <Button
-          type="button"
-          onClick={onCancel}
-          color="red"
-          leftIcon={cancelButtonIcon}
-          disabled={loading}
-        >
+        <Button type="button" onClick={onCancel} color="red" leftIcon={cancelButtonIcon} disabled={loading}>
           Cancelar
         </Button>
 
-        <Button
-          type="submit"
-          leftIcon={successButtonIcon}
-          disabled={loading}
-          loading={loading}
-        >
+        <Button type="submit" leftIcon={successButtonIcon} disabled={loading} loading={loading}>
           Registrar
         </Button>
       </footer>

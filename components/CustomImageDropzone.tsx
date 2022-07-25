@@ -8,9 +8,7 @@ import { FileRejection, ErrorCode } from 'react-dropzone';
 
 function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
   if (status.accepted) {
-    return theme.colors[theme.primaryColor][
-      theme.colorScheme === 'dark' ? 4 : 6
-    ];
+    return theme.colors[theme.primaryColor][theme.colorScheme === 'dark' ? 4 : 6];
   }
   if (status.rejected) {
     return theme.colors.red[theme.colorScheme === 'dark' ? 4 : 6];
@@ -23,10 +21,7 @@ function getIconColor(status: DropzoneStatus, theme: MantineTheme) {
   return theme.colors.gray[7];
 }
 
-function ImageUploadIcon({
-  status,
-  ...props
-}: React.ComponentProps<TablerIcon> & { status: DropzoneStatus }) {
+function ImageUploadIcon({ status, ...props }: React.ComponentProps<TablerIcon> & { status: DropzoneStatus }) {
   if (status.accepted) {
     return <Upload {...props} />;
   }
@@ -38,29 +33,16 @@ function ImageUploadIcon({
   return <Photo {...props} />;
 }
 
-export const dropzoneChildren = (
-  status: DropzoneStatus,
-  theme: MantineTheme,
-  fileSize: number
-) => (
-  <Group
-    position="center"
-    spacing="xl"
-    style={{ minHeight: 180, pointerEvents: 'none' }}
-  >
-    <ImageUploadIcon
-      status={status}
-      style={{ color: getIconColor(status, theme) }}
-      size={80}
-    />
+export const dropzoneChildren = (status: DropzoneStatus, theme: MantineTheme, fileSize: number) => (
+  <Group position="center" spacing="xl" style={{ minHeight: 180, pointerEvents: 'none' }}>
+    <ImageUploadIcon status={status} style={{ color: getIconColor(status, theme) }} size={80} />
 
     <div>
       <Text size="xl" inline className="text-center">
         Arrastre las imágenes aquí o haga clic para seleccionar archivos.
       </Text>
       <Text size="sm" color="dimmed" inline mt={7} className="text-center">
-        Adjunte el archivo que desea subir, el cual no debe exceder los{' '}
-        {fileSize}MB
+        Adjunte el archivo que desea subir, el cual no debe exceder los {fileSize}MB
       </Text>
     </div>
   </Group>

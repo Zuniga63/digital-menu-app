@@ -23,9 +23,7 @@ export default function AdminLayout({ title, children }: ILayoutProps) {
 
           <Header />
 
-          <main className="mb-16 min-h-screen p-2 lg:py-6 lg:px-4">
-            {children}
-          </main>
+          <main className="mb-16 min-h-screen p-2 lg:py-6 lg:px-4">{children}</main>
 
           <NavDrawer />
 

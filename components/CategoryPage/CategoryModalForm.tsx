@@ -5,10 +5,7 @@ interface ModalProps {
   opened?: boolean;
   onClose(): void;
 }
-export default function CategoryModalForm({
-  onClose,
-  opened = false,
-}: ModalProps) {
+export default function CategoryModalForm({ onClose, opened = false }: ModalProps) {
   return (
     <Modal opened={opened} onClose={onClose}>
       <CategoryForm onCloseModal={onClose} />

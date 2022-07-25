@@ -43,5 +43,5 @@ button {
 
 .product__fig::before {
   content: '';
-  @apply z-back absolute inset-0 block bg-cover bg-no-repeat opacity-40;
+  @apply absolute inset-0 z-back block bg-cover bg-no-repeat opacity-40;
 }
