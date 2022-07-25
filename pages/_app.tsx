@@ -2,6 +2,7 @@
 import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { useEffect } from 'react';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
@@ -9,10 +10,23 @@ import type { AppProps } from 'next/app';
 import { MantineProvider } from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
 
-import { store, wrapper } from '../store';
+import { useAppDispatch } from 'store/hooks';
+import { SET_USER } from 'store/reducers/Auth/actions';
+import { actionBody, store, wrapper } from '../store';
 
 function MyApp({ Component, pageProps }: AppProps) {
   axios.defaults.baseURL = process.env.NEXT_PUBLIC_URL_API;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+
+    if (token && user) {
+      axios.defaults.headers.common.Authorization = `Beare ${token}`;
+      dispatch(actionBody(SET_USER, JSON.parse(user)));
+    }
+  }, []);
   return (
     <Provider store={store}>
       <MantineProvider

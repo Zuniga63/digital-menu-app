@@ -11,9 +11,7 @@ import CategoryCard from 'components/CategoryPage/CategoryCard';
 
 const CategoriesPage: NextPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
-  const { loading, storeLoading, categories, reload } = useAppSelector(
-    ({ CategoryReducer }) => CategoryReducer
-  );
+  const { loading, storeLoading, categories, reload } = useAppSelector(({ CategoryReducer }) => CategoryReducer);
 
   const dispatch = useAppDispatch();
   const isEmpty = !loading && !categories.length;
@@ -41,9 +39,7 @@ const CategoriesPage: NextPage = () => {
     </p>
   );
 
-  const categoryCards = categories.map((item) => (
-    <CategoryCard key={item.id} category={item} />
-  ));
+  const categoryCards = categories.map((item) => <CategoryCard key={item.id} category={item} />);
 
   return (
     <>

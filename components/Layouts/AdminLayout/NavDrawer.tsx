@@ -2,10 +2,7 @@ import Link from 'next/link';
 import { Drawer, Divider } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
-import {
-  hideNavMenu,
-  showMenu,
-} from 'store/reducers/NavMenuReducer/actionCreators';
+import { hideNavMenu, showMenu } from 'store/reducers/NavMenuReducer/actionCreators';
 import Header from '../AppLayout/Header';
 
 function NavDrawer() {
@@ -15,7 +12,7 @@ function NavDrawer() {
   const desktopScreen = useMediaQuery('(min-width: 1024px)');
 
   const links = [
-    { id: 0, name: 'Panel', url: '/admin' },
+    /* { id: 0, name: 'Panel', url: '/admin' }, */
     { id: 1, name: 'Categorías', url: '/admin/categorias' },
     { id: 2, name: 'Productos', url: '/admin/productos' },
     { id: 3, name: 'Set de opciones', url: '/admin/set-de-opciones' },
