@@ -14,7 +14,7 @@ export default function index({ title, children }: ILayoutProps) {
   return (
     <div className="h-screen bg-white lg:py-8">
       <div className="mx-auto h-full overflow-hidden shadow md:rounded-md lg:max-w-xl">
-        <div className="relative h-full overflow-y-auto bg-gray-100">
+        <div className="body relative h-full overflow-y-auto">
           <Head>
             <title>{TITLE}</title>
             <link rel="icon" href="/favicon.ico" />
@@ -22,7 +22,7 @@ export default function index({ title, children }: ILayoutProps) {
 
           <Header />
 
-          <main> {children} </main>
+          <main className="mb-8"> {children} </main>
 
           <NavDrawer />
 

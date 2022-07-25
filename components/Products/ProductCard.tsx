@@ -88,7 +88,7 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
           <div className="col-span-3 mt-3">
             <div className="flex justify-start">
               {product.optionSets.map((item) => (
-                <div className="flex items-center gap-2 rounded-full bg-blue-400 py-1 px-3 text-gray-700">
+                <div className="flex items-center gap-2 rounded-full bg-blue-400 py-1 px-3 text-gray-700" key={item.id}>
                   <List size={16} /> <span className="text-xs font-bold tracking-wide">{item.title}</span>
                 </div>
               ))}
