@@ -8,6 +8,7 @@ import PlusButtom from 'components/PlusButton';
 import ModalForm from 'components/CategoryPage/CategoryModalForm';
 import LayoutHeader from 'components/LayoutHeader';
 import CategoryCard from 'components/CategoryPage/CategoryCard';
+import withAuth from 'utils/withAuth';
 
 const CategoriesPage: NextPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -58,4 +59,4 @@ const CategoriesPage: NextPage = () => {
   );
 };
 
-export default CategoriesPage;
+export default withAuth(CategoriesPage);

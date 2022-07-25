@@ -27,6 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       dispatch(actionBody(SET_USER, JSON.parse(user)));
     }
   }, []);
+
   return (
     <Provider store={store}>
       <MantineProvider
