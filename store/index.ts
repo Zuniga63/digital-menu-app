@@ -7,9 +7,10 @@ import { createWrapper } from 'next-redux-wrapper';
 import NavMenuReducer from './reducers/NavMenuReducer';
 import CategoryReducer from './reducers/CategoryReducer';
 import AuthReducer from './reducers/Auth';
+import HomeReducer from './reducers/Home';
 import { IAction } from './reducers/interfaces';
 
-const rootReducer = combineReducers({ NavMenuReducer, CategoryReducer, AuthReducer });
+const rootReducer = combineReducers({ NavMenuReducer, CategoryReducer, AuthReducer, HomeReducer });
 
 export const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(thunkMiddleware)));
 
