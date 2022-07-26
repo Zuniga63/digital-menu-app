@@ -38,15 +38,15 @@ export default function ProductCard({ product, imagePriority }: Props) {
           {product.name}
         </h4>
         <p className="product__description w-full text-xs">{product.description}</p>
-        <p className="mt-2 flex flex-col font-black tracking-widest text-gray-dark">
+        <p className="mt-2 font-black tracking-widest text-gray-dark">
           <span className={percentage && ' inline-block text-xs text-gray-400 line-through'}>{price}</span>
-          {percentage && (
-            <div className="flex gap-2">
-              <span className="text-sm font-bold">{priceWithDiscount}</span>
-              <span className=" text-xs text-green-700 ">({percentage})</span>
-            </div>
-          )}
         </p>
+        {percentage && (
+          <p className="flex gap-2 font-black tracking-widest text-gray-dark">
+            <span className="text-sm font-bold">{priceWithDiscount}</span>
+            <span className=" text-xs text-green-700 ">({percentage})</span>
+          </p>
+        )}
         {!!product?.optionSets?.length && (
           <div className="flex justify-start">
             <div className="relative -left-4 scale-75 transform rounded border border-green-900 bg-green-800 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
