@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { IProductHome } from 'store/reducers/interfaces';
 import { List, Photo } from 'tabler-icons-react';
@@ -9,8 +9,14 @@ interface Props {
 }
 export default function ProductCard({ product, imagePriority }: Props) {
   const { image, price, hasDiscount, priceWithDiscount } = product;
-  const percentage =
-    price && hasDiscount && priceWithDiscount ? `${Math.round((1 - priceWithDiscount / price) * 100)}% DCT` : '';
+  const [percentage, setPercentage] = useState('');
+
+  useEffect(() => {
+    if (hasDiscount && price && priceWithDiscount) {
+      const fraction = Math.round(1 - priceWithDiscount / price);
+      setPercentage(`${fraction * 100}% DCT`);
+    }
+  }, []);
 
   return (
     <div
