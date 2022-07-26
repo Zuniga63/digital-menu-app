@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Layout from 'components/Layouts/AppLayout';
 import { ICategoryHome, IHomeResponse } from 'store/reducers/interfaces';
 import CategoryList from 'components/Home/CategoryList';
+import ProductDrawer from 'components/Home/ProductDrawer';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const api = process.env.NEXT_PUBLIC_URL_API;
@@ -38,6 +39,7 @@ const Home: NextPage<Props> = ({ categories }: Props) => (
       </Head>
 
       <CategoryList categories={categories} />
+      <ProductDrawer />
     </div>
   </Layout>
 );

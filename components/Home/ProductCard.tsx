@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { IProductHome } from 'store/reducers/interfaces';
-import { List, Photo } from 'tabler-icons-react';
+import { List } from 'tabler-icons-react';
+import { useAppDispatch } from 'store/hooks';
+import { showProduct } from 'store/reducers/Home/creators';
 
 interface Props {
   product: IProductHome;
@@ -10,6 +12,7 @@ interface Props {
 export default function ProductCard({ product, imagePriority }: Props) {
   const { image, price, hasDiscount, priceWithDiscount } = product;
   const [percentage, setPercentage] = useState('');
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (hasDiscount && price && priceWithDiscount) {
@@ -20,20 +23,18 @@ export default function ProductCard({ product, imagePriority }: Props) {
 
   return (
     <div
-      className="product relative grid grid-cols-auto-fr gap-3 border-b border-gray-500 pt-8 pb-4 pr-4 pl-2 md:rounded md:border-none md:shadow md:shadow-gray-400"
+      className="product relative grid grid-cols-auto-fr gap-3 border-b border-gray-500 pt-8 pb-4 pr-4 pl-4 md:rounded md:border-none md:shadow md:shadow-gray-400"
       key={product.id}
+      onClick={() => dispatch(showProduct(product))}
+      role="presentation"
     >
-      <figure className="product__fig  relative z-0 m-0 h-24 w-24 overflow-hidden rounded-lg border border-gray-500">
-        {image ? (
+      {image && (
+        <figure className="product__fig  relative z-0 m-0 h-24 w-24 overflow-hidden rounded-lg border border-gray-500">
           <Image src={image.url} alt={product.name} layout="fill" priority={imagePriority} />
-        ) : (
-          <div className="flex aspect-square items-center justify-center rounded text-gray-500 ring-2 ring-gray-400">
-            <Photo size={40} />
-          </div>
-        )}
-      </figure>
+        </figure>
+      )}
 
-      <div className="text-dark">
+      <div className={image ? 'text-dark' : 'col-span-2 text-dark'}>
         <h4 className="mb-1 border-b-4 border-double border-gray-400 font-display text-sm font-normal">
           {product.name}
         </h4>
