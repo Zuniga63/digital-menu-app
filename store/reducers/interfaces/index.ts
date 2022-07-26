@@ -106,7 +106,7 @@ export interface IProductOptionItemHome {
   id: string;
   product: string;
   optionSet: string;
-  optionSetItem: string;
+  optionSetItem: any;
   price?: number;
   order: number;
   published: boolean;
@@ -172,4 +172,9 @@ export interface ICategoryHome {
 export interface IHomeResponse {
   ok: boolean;
   categories: ICategoryHome[];
+}
+
+export interface IProductResponse {
+  ok: boolean;
+  product: IProductHome;
 }
