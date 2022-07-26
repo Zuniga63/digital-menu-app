@@ -15,7 +15,7 @@ export default function CategoryList({ categories }: Props) {
       </div>
 
       {categories.map((item, index) =>
-        item.products ? <CategoryGroup key={item.id} category={item} imagePriority={index === 1} /> : null
+        item.products ? <CategoryGroup key={item.id} category={item} imagePriority={index === 0} /> : null
       )}
     </>
   );
