@@ -119,7 +119,7 @@ export default function NavDrawer() {
           </InputWrapper>
 
           <PasswordInput
-            placeholder="***"
+            placeholder="********"
             label="Contraseña"
             value={password}
             onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
@@ -135,7 +135,7 @@ export default function NavDrawer() {
             </Button>
 
             <Button loading={loading} type="submit">
-              Iniciar Sesion
+              {loading ? <span>Procesando</span> : <span>Iniciar Sesión</span>}
             </Button>
           </div>
         </form>

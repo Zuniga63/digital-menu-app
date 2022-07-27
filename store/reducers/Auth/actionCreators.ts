@@ -29,6 +29,7 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
         }
+        toast.success(`Bienvenido ${user?.name}`);
       }
     } catch (error: any) {
       const { response, request } = error;
