@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { Button, Drawer, Modal, InputWrapper, Input, PasswordInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import Image from 'next/image';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
 import { hideNavMenu, showMenu } from 'store/reducers/NavMenuReducer/actionCreators';
 import { At, User, Lock } from 'tabler-icons-react';
@@ -14,6 +15,7 @@ export default function NavDrawer() {
   const [modalOpened, setModalOpened] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [avatar, setAvatar] = useState('');
 
   const { menuIsOpen } = useAppSelector(({ NavMenuReducer }) => NavMenuReducer);
   const { user, isAdmin, isAuth, loading, error } = useAppSelector(({ AuthReducer }) => AuthReducer);
@@ -45,6 +47,11 @@ export default function NavDrawer() {
   };
 
   useEffect(() => {
+    if (isAuth) {
+      const name = user?.name.replaceAll(' ', '+');
+      const url = `https://ui-avatars.com/api/?background=0d6efd&name=${name}`;
+      setAvatar(url);
+    }
     if (isAuth && modalOpened) closeModal();
   }, [isAuth]);
 
@@ -66,9 +73,10 @@ export default function NavDrawer() {
         <>
           <Header />
           <div className="flex flex-col items-center p-8">
-            <div className="relative mb-4 aspect-square w-1/2 rounded-full bg-gray-100 shadow-new-tag">
-              <div className="w-ful flex h-full items-center justify-center text-gray-400 text-opacity-40">
-                <User size={80} />
+            <div className="relative mb-4 aspect-square w-1/3 overflow-hidden rounded-full bg-gray-100 shadow-new-tag">
+              <div className="w-ful relative flex h-full items-center justify-center text-gray-400 text-opacity-40">
+                {!isAuth && <User size={40} />}
+                {isAuth && <Image src={avatar} alt={user?.name} layout="fill" />}
               </div>
             </div>
             {isAuth && (
