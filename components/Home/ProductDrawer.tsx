@@ -62,7 +62,7 @@ export default function ProductDrawer() {
           </button>
         </header>
 
-        <div className="relative h-full overflow-y-auto pb-40">
+        <div className="relative h-full overflow-y-auto bg-gray-dark pb-40">
           {image && (
             <figure className="block w-full">
               <Image
@@ -75,18 +75,18 @@ export default function ProductDrawer() {
             </figure>
           )}
           <div className="px-6 py-8">
-            <p className="mb-4 text-lg text-gray-600"> {product?.description} </p>
+            <p className="mb-4 text-lg text-light"> {product?.description} </p>
             <div className="flex flex-col items-end">
-              <p className="font-bold tracking-widest text-gray-900">
+              <p className="font-bold tracking-widest text-light">
                 {!!discountPercentage && <span className="text-sm">antes </span>}
                 <span className={discountPercentage ? 'text-sm text-gray-400 line-through' : 'text-xl'}>
                   {currencyFormat(product?.price)}
                 </span>
               </p>
               {!!discountPercentage && (
-                <p className="text-xl font-bold tracking-widest text-gray-900">
+                <p className="text-xl font-bold tracking-widest text-light">
                   {currencyFormat(product?.priceWithDiscount)}{' '}
-                  <span className="text-sm text-green-700">({discountPercentage} %)</span>
+                  <span className="text-sm text-green-500">({discountPercentage} %)</span>
                 </p>
               )}
             </div>
@@ -94,17 +94,22 @@ export default function ProductDrawer() {
 
           {product?.optionSets &&
             product.optionSets.map((optionSet) => (
-              <div key={optionSet.id} className="w-full px-6">
-                <header className="rounded-t bg-emerald-600 px-4 py-2">
-                  <h3 className="text-lg font-bold tracking-wider text-light">{optionSet.title}</h3>
-                </header>
-                <ul className="divide-y divide-white rounded-b border-x border-b border-emerald-200 bg-emerald-100 bg-opacity-80 py-4 px-2">
-                  {optionSet.items.map((item) => (
-                    <li key={item.id} className="block bg-emerald-50 px-4 py-2 text-lg text-dark">
-                      {item.optionSetItem.name}
-                    </li>
-                  ))}
-                </ul>
+              <div key={optionSet.id} className="w-full px-6 pb-4">
+                <div className="rounded shadow">
+                  <header className="rounded-t bg-dark px-4 py-2">
+                    <h3 className="text-lg font-bold tracking-wider text-light">{optionSet.title}</h3>
+                  </header>
+                  <ul className="divide-y divide-white rounded-b border-x border-b border-gray-200 bg-gray-100 bg-opacity-80 py-6 px-2">
+                    {optionSet.items.map((item) => (
+                      <li
+                        key={item.id}
+                        className="block bg-gray-400 px-4 py-2 text-lg font-bold tracking-widest text-gray-dark"
+                      >
+                        {item.optionSetItem.name}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
         </div>
