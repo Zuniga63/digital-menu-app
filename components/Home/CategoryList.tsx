@@ -1,11 +1,12 @@
 import React from 'react';
-import { ICategoryHome } from 'store/reducers/interfaces';
+import { ICategoryHome, IImage } from 'store/reducers/interfaces';
 import CategoryGroup from './CategoryGroup';
 
 interface Props {
+  categoryImageHandler(image: IImage): void;
   categories: ICategoryHome[];
 }
-export default function CategoryList({ categories }: Props) {
+export default function CategoryList({ categories, categoryImageHandler }: Props) {
   return (
     <>
       <div className="mx-auto mb-20 mt-10 w-11/12">
@@ -15,7 +16,14 @@ export default function CategoryList({ categories }: Props) {
       </div>
 
       {categories.map((item, index) =>
-        item.products ? <CategoryGroup key={item.id} category={item} imagePriority={index === 0} /> : null
+        item.products ? (
+          <CategoryGroup
+            key={item.id}
+            category={item}
+            imagePriority={index === 0}
+            imageClickHandler={categoryImageHandler}
+          />
+        ) : null
       )}
     </>
   );
