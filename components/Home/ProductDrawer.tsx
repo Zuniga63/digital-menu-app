@@ -62,7 +62,7 @@ export default function ProductDrawer() {
           </button>
         </header>
 
-        <div className="relative h-full overflow-y-auto bg-gray-dark pb-40">
+        <div className="relative h-full overflow-y-auto bg-gradient-to-b from-dark to-gray-600 pb-40">
           {image && (
             <figure className="block w-full">
               <Image
@@ -75,7 +75,7 @@ export default function ProductDrawer() {
             </figure>
           )}
           <div className="px-6 py-8">
-            <p className="mb-4 text-lg text-light"> {product?.description} </p>
+            {product?.description && <p className="mb-4 text-lg text-light"> {product?.description} </p>}
             <div className="flex flex-col items-end">
               <p className="font-bold tracking-widest text-light">
                 {!!discountPercentage && <span className="text-sm">antes </span>}
@@ -96,15 +96,12 @@ export default function ProductDrawer() {
             product.optionSets.map((optionSet) => (
               <div key={optionSet.id} className="w-full px-6 pb-4">
                 <div className="rounded shadow">
-                  <header className="rounded-t bg-dark px-4 py-2">
-                    <h3 className="text-lg font-bold tracking-wider text-light">{optionSet.title}</h3>
+                  <header className="rounded-t bg-dark px-6 py-4">
+                    <h3 className="text-xl font-bold tracking-wider text-yellow-400">{optionSet.title}</h3>
                   </header>
-                  <ul className="divide-y divide-white rounded-b border-x border-b border-gray-200 bg-gray-100 bg-opacity-80 py-6 px-2">
+                  <ul className="divide-y divide-white rounded-b border-x border-b border-gray-200 bg-gradient-to-br from-light to-yellow-400 py-6 px-2">
                     {optionSet.items.map((item) => (
-                      <li
-                        key={item.id}
-                        className="block bg-gray-400 px-4 py-2 text-lg font-bold tracking-widest text-gray-dark"
-                      >
+                      <li key={item.id} className="block px-4 py-2 text-lg font-bold tracking-wider text-dark">
                         {item.optionSetItem.name}
                       </li>
                     ))}
