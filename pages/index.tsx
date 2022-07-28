@@ -47,7 +47,7 @@ const Home: NextPage<Props> = ({ categories }: Props) => {
   const dispatch = useAppDispatch();
 
   const [firtsTime, setFirstTime] = useState(true);
-  const [modalOpened, setModaOpened] = useState(true);
+  const [modalOpened, setModaOpened] = useState(false);
   const [categoryImage, setCategoryImage] = useState<IImage | null | undefined>(null);
 
   //-----------------------------------------------------------------------

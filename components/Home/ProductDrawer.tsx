@@ -55,9 +55,9 @@ export default function ProductDrawer() {
       position="right"
     >
       <>
-        <header className="top-o sticky flex justify-center bg-dark px-4 py-6 text-light">
-          <h2 className="font-display text-lg tracking-widest">{product?.name}</h2>
-          <button type="button" onClick={closeDrawer} className="absolute right-4">
+        <header className="top-o sticky flex justify-between bg-dark px-4 py-6 text-light">
+          <h2 className="flex-grow text-center font-display text-lg tracking-widest">{product?.name}</h2>
+          <button type="button" onClick={closeDrawer} className="flex-grow-0 focus:outline-none">
             <X size={25} />
           </button>
         </header>
