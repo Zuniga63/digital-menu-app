@@ -9,6 +9,7 @@ module.exports = {
       fontFamily: {
         sans: ['Roboto', 'sans-serif', ...defaultTheme.fontFamily.sans],
         display: ['Zen Dots', 'cursive', ...defaultTheme.fontFamily.sans],
+        hand: ['Dancing Script', 'cursive', ...defaultTheme.fontFamily.sans],
       },
       boxShadow: {
         'float-button': '2px 2px 3px #999',
