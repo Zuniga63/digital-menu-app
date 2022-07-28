@@ -4,6 +4,7 @@ import { IProductHome } from 'store/reducers/interfaces';
 import { List } from 'tabler-icons-react';
 import { useAppDispatch } from 'store/hooks';
 import { showProduct } from 'store/reducers/Home/creators';
+import currencyFormat from 'utils/currencyFormat';
 
 interface Props {
   product: IProductHome;
@@ -16,8 +17,8 @@ export default function ProductCard({ product, imagePriority }: Props) {
 
   useEffect(() => {
     if (hasDiscount && price && priceWithDiscount) {
-      const fraction = Math.round(1 - priceWithDiscount / price);
-      setPercentage(`${fraction * 100}% DCT`);
+      const fraction = Math.round((1 - priceWithDiscount / price) * 100);
+      setPercentage(`${fraction}% DCT`);
     }
   }, []);
 
@@ -30,32 +31,38 @@ export default function ProductCard({ product, imagePriority }: Props) {
     >
       {image && (
         <figure className="product__fig  relative z-0 m-0 h-24 w-24 overflow-hidden rounded-lg border border-gray-500">
-          <Image src={image.url} alt={product.name} layout="fill" priority={imagePriority} />
+          <Image src={image.url} alt={product.name} layout="fill" objectFit="cover" priority={imagePriority} />
         </figure>
       )}
 
-      <div className={image ? 'text-dark' : 'col-span-2 text-dark'}>
-        <h4 className="mb-1 border-b-4 border-double border-gray-400 font-display text-sm font-normal">
+      <div className={image ? 'text-light' : 'col-span-2 text-light'}>
+        <h4 className="mb-1 border-b-4 border-double border-light pb-1 font-display text-sm font-normal tracking-wider">
           {product.name}
         </h4>
-        <p className="product__description w-full text-xs">{product.description}</p>
-        <p className="mt-2 font-black tracking-widest text-gray-dark">
-          <span className={percentage && ' inline-block text-xs text-gray-400 line-through'}>{price}</span>
+        {product.description && (
+          <p className="product__description w-full text-sm leading-normal line-clamp-2">{product.description}</p>
+        )}
+        <p className="mt-2 font-black tracking-widest text-light">
+          <span className={percentage && ' inline-block text-xs text-light text-opacity-50 line-through'}>
+            {currencyFormat(price)}
+          </span>
         </p>
         {percentage && (
-          <p className="flex gap-2 font-black tracking-widest text-gray-dark">
-            <span className="text-sm font-bold">{priceWithDiscount}</span>
-            <span className=" text-xs text-green-700 ">({percentage})</span>
+          <p className="flex gap-2 font-black tracking-widest text-light">
+            <span className="text-sm font-bold">{currencyFormat(priceWithDiscount)}</span>
+            <span className=" scale-75 text-xs text-green-600">({percentage})</span>
           </p>
         )}
-        {!!product?.optionSets?.length && (
+      </div>
+      {!!product?.optionSets?.length && (
+        <div className="col-span-2">
           <div className="flex justify-start">
             <div className="relative -left-4 scale-75 transform rounded border border-green-900 bg-green-800 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
               <List size={16} className="inline-block" /> Tiene opciones.{' '}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
       {product.isNew && (
         <div className="absolute top-2 right-2 scale-75 transform rounded border border-red-700 bg-red-600 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
           New
