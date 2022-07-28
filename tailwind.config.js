@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const lineclamp = require('@tailwindcss/line-clamp');
 const defaultTheme = require('tailwindcss/defaultTheme');
 const prettier = require('prettier-plugin-tailwindcss');
 
@@ -35,5 +36,5 @@ module.exports = {
       },
     },
   },
-  plugins: [prettier],
+  plugins: [prettier, lineclamp],
 };
