@@ -45,9 +45,9 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
     <div className="relative rounded border bg-white px-4 py-6 shadow-md">
       <div className="mb-4 grid grid-cols-3 gap-x-4">
         <div className="flex flex-col items-center">
-          <figure className="relative mb-2 block aspect-square w-full">
+          <figure className="relative mb-2 block aspect-square w-full overflow-hidden rounded-md shadow shadow-gray-500">
             {image ? (
-              <Image src={image.url} alt={product.name} layout="fill" />
+              <Image src={image.url} alt={product.name} layout="fill" objectFit="cover" />
             ) : (
               <div className="flex aspect-square items-center justify-center rounded text-gray-500 ring-2 ring-gray-400">
                 <Photo size={40} />
@@ -74,27 +74,31 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
           </div>
         </div>
 
-        {product.category && (
-          <div className="col-span-3 mt-3">
-            <div className="flex justify-start">
-              <div className="flex items-center gap-2 rounded-full bg-cyan-200 py-1 px-3 text-gray-700">
-                <Category size={16} /> <span className="text-xs font-bold tracking-wide">{product.category.name}</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {!!product.optionSets?.length && (
-          <div className="col-span-3 mt-3">
-            <div className="flex justify-start">
-              {product.optionSets.map((item) => (
-                <div className="flex items-center gap-2 rounded-full bg-blue-400 py-1 px-3 text-gray-700" key={item.id}>
-                  <List size={16} /> <span className="text-xs font-bold tracking-wide">{item.title}</span>
+        <div className="col-span-3 mt-3">
+          <div className="flex gap-x-3">
+            {product.category && (
+              <div className="flex justify-start">
+                <div className="flex items-center gap-2 rounded-full bg-cyan-200 py-1 px-3 text-gray-700">
+                  <Category size={16} />{' '}
+                  <span className="text-xs font-bold tracking-wide">{product.category.name}</span>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {!!product.optionSets?.length && (
+              <div className="flex justify-start">
+                {product.optionSets.map((item) => (
+                  <div
+                    className="flex items-center gap-2 rounded-full bg-blue-400 py-1 px-3 text-gray-700"
+                    key={item.id}
+                  >
+                    <List size={16} /> <span className="text-xs font-bold tracking-wide">{item.title}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
       <footer className="flex justify-end px-5">
         <Button
