@@ -59,9 +59,9 @@ export default function CategoryCard({ category }: Props) {
     <div className="relative rounded border bg-white px-4 py-6 shadow-md">
       <div className="mb-4 grid grid-cols-3 gap-x-4">
         <div className="flex flex-col items-center">
-          <figure className="relative mb-2 block aspect-square w-full">
+          <figure className="relative mb-2 block aspect-square w-full overflow-hidden rounded shadow-md shadow-gray-600 ">
             {image ? (
-              <Image src={image.url} alt={category.name} layout="fill" />
+              <Image src={image.url} alt={category.name} layout="fill" objectFit="cover" />
             ) : (
               <div className="flex aspect-square items-center justify-center rounded text-gray-500 ring-2 ring-gray-400">
                 <Photo size={40} />
