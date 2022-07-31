@@ -15,16 +15,14 @@ export default function CategoryList({ categories, categoryImageHandler }: Props
         </h2>
       </div>
 
-      {categories.map((item, index) =>
-        item.products ? (
-          <CategoryGroup
-            key={item.id}
-            category={item}
-            imagePriority={index === 0}
-            imageClickHandler={categoryImageHandler}
-          />
-        ) : null
-      )}
+      {categories.map((item, index) => (
+        <CategoryGroup
+          key={item.id}
+          category={item}
+          imagePriority={index === 0}
+          imageClickHandler={categoryImageHandler}
+        />
+      ))}
     </>
   );
 }

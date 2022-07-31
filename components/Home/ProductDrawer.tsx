@@ -23,6 +23,7 @@ export default function ProductDrawer() {
   //-------------------------------------------------------
   const [image, setImage] = useState<IImage | undefined>(product?.image);
   const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [base, setBase] = useState(0);
 
   //-------------------------------------------------------
   // METHODS
@@ -33,11 +34,13 @@ export default function ProductDrawer() {
     else setImage(undefined);
 
     if (product?.hasDiscount && product.price && product.priceWithDiscount) {
-      const fraction = product.priceWithDiscount / product.price;
+      const fraction = 1 - product.priceWithDiscount / product.price;
       const percentage = fraction * 100;
       setDiscountPercentage(Math.round(percentage));
+      setBase(product.priceWithDiscount);
     } else {
       setDiscountPercentage(0);
+      if (product?.price) setBase(product.price);
     }
   }, [product]);
 
@@ -99,12 +102,38 @@ export default function ProductDrawer() {
                   <header className="rounded-t bg-dark px-6 py-4">
                     <h3 className="text-xl font-bold tracking-wider text-yellow-400">{optionSet.title}</h3>
                   </header>
-                  <ul className="divide-y divide-white rounded-b border-x border-b border-gray-200 bg-gradient-to-br from-light to-yellow-400 py-6 px-2">
-                    {optionSet.items.map((item) => (
-                      <li key={item.id} className="block px-4 py-2 text-lg font-bold tracking-wider text-dark">
-                        {item.optionSetItem.name}
-                      </li>
-                    ))}
+                  <ul className="divide-y divide-slate-400 rounded-b border-x border-b border-dark bg-gradient-to-br from-slate-900 to-slate-400 py-6 px-2">
+                    {optionSet.items.map(
+                      (item) =>
+                        item.published &&
+                        item.optionSetItem.isEnabled && (
+                          <li key={item.id} className="block px-4 py-2 tracking-wider">
+                            <div className="flex items-center gap-x-3">
+                              <figure className="block h-16 w-16 flex-shrink-0 flex-grow-0 overflow-hidden rounded-full shadow shadow-yellow-400">
+                                {item.optionSetItem.image && (
+                                  <Image
+                                    src={item.optionSetItem.image.url}
+                                    width={item.optionSetItem.image.width}
+                                    height={item.optionSetItem.image.height}
+                                    layout="responsive"
+                                  />
+                                )}
+                              </figure>
+                              <div className="flex-grow">
+                                <p className="font-display text-yellow-400">{item.optionSetItem.name}</p>
+                                <p className="text-sm font-bold text-light">
+                                  {item.price && (
+                                    <span className="mr-2 inline-block font-sans text-xs text-light text-opacity-80">
+                                      (+{currencyFormat(item.price)})
+                                    </span>
+                                  )}
+                                  {currencyFormat(base + (item.price || 0))}
+                                </p>
+                              </div>
+                            </div>
+                          </li>
+                        )
+                    )}
                   </ul>
                 </div>
               </div>
