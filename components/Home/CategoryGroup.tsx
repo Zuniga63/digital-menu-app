@@ -14,7 +14,7 @@ export default function CategoryGroup({ category, imagePriority, imageClickHandl
   const [productList, setProductList] = useState<IProductHome[]>(products);
 
   useEffect(() => {
-    setProductList([...products.filter((p) => p.published)]);
+    setProductList(products.filter((p) => p.published));
   }, []);
 
   return productList.length ? (
