@@ -17,6 +17,8 @@ import {
   SET_STORE_ERROR,
   SET_STORE_IS_SUCCESS,
   SET_STORE_LOADING,
+  SET_UPDATING_STATE,
+  UPDATE_CATEGORY_STATE,
 } from './actions';
 import { ICategory } from '../interfaces';
 
@@ -27,7 +29,6 @@ export interface IAllCategoriesResponse {
   categories: ICategory[];
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export const getAllCategories = (): AppThunkAction => {
   return async (dispatch) => {
     try {
@@ -137,6 +138,25 @@ export const deleteCategory = (categoryId: string): AppThunkAction => {
         dispatch(actionBody(SET_DELETE_ERROR, ''));
         dispatch(actionBody(SET_DELETE_IS_SUCCESS, false));
       }, 1000);
+    }
+  };
+};
+
+export const updateCategoryState = (categoryId: string, enabled: boolean): AppThunkAction => {
+  return async (dispatch) => {
+    const url = `${baseUrl}/${categoryId}/${enabled ? 'enable' : 'disable'}`;
+    dispatch(actionBody(SET_UPDATING_STATE, categoryId));
+
+    try {
+      const res = await axios.put(url);
+      const { data } = res;
+      if (data.ok) {
+        dispatch(actionBody(UPDATE_CATEGORY_STATE, { categoryId, enabled }));
+      }
+    } catch (error) {
+      toast.error(`No se pudo ${enabled ? 'habilitar' : 'deshabilitar'} la categoría.`);
+    } finally {
+      dispatch(actionBody(SET_UPDATING_STATE, ''));
     }
   };
 };

@@ -13,6 +13,8 @@ import {
   SET_STORE_ERROR,
   SET_STORE_IS_SUCCESS,
   SET_STORE_LOADING,
+  SET_UPDATING_STATE,
+  UPDATE_CATEGORY_STATE,
 } from './actions';
 
 export interface ICategoryState {
@@ -26,6 +28,8 @@ export interface ICategoryState {
   deleteIsSuccess: boolean;
   deleteError: string;
   reload: boolean;
+
+  updatingState: string;
 }
 
 const initialState: ICategoryState = {
@@ -39,6 +43,8 @@ const initialState: ICategoryState = {
   deleteIsSuccess: false,
   deleteError: '',
   reload: false,
+
+  updatingState: '',
 };
 
 export default function CategoryReducer(state = initialState, action: IAction): ICategoryState {
@@ -111,6 +117,27 @@ export default function CategoryReducer(state = initialState, action: IAction): 
         ...state,
         reload: action.payload,
       };
+    case SET_UPDATING_STATE: {
+      return {
+        ...state,
+        updatingState: action.payload,
+      };
+    }
+    case UPDATE_CATEGORY_STATE: {
+      const { categoryId, enabled } = action.payload;
+      const list = state.categories.map((category) => {
+        if (category.id === categoryId) {
+          return { ...category, isEnabled: enabled };
+        }
+
+        return category;
+      });
+
+      return {
+        ...state,
+        categories: list,
+      };
+    }
     default:
       return state;
   }
