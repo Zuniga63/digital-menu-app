@@ -7,7 +7,7 @@ import { X } from 'tabler-icons-react';
 import Image from 'next/image';
 
 import { hideProduct } from 'store/reducers/Home/creators';
-import { IImage } from 'store/reducers/interfaces';
+import { IImage, IProductOptionSetHome } from 'store/reducers/interfaces';
 import currencyFormat from 'utils/currencyFormat';
 
 export default function ProductDrawer() {
@@ -23,7 +23,9 @@ export default function ProductDrawer() {
   //-------------------------------------------------------
   const [image, setImage] = useState<IImage | undefined>(product?.image);
   const [discountPercentage, setDiscountPercentage] = useState(0);
+  const [hasDiscount, setHasDiscount] = useState(false);
   const [base, setBase] = useState(0);
+  const [optionSets, setOptionSets] = useState<IProductOptionSetHome[]>([]);
 
   //-------------------------------------------------------
   // METHODS
@@ -38,9 +40,26 @@ export default function ProductDrawer() {
       const percentage = fraction * 100;
       setDiscountPercentage(Math.round(percentage));
       setBase(product.priceWithDiscount);
+      setHasDiscount(true);
     } else {
       setDiscountPercentage(0);
+      setHasDiscount(false);
       if (product?.price) setBase(product.price);
+    }
+
+    // Se optimizan los sets de opciones
+    if (product?.optionSets && product.optionSets.length) {
+      const setList = product.optionSets.map((optionSet) => {
+        const items = optionSet.items.slice().sort((a, b) => {
+          if (a.order > b.order) return 1;
+          if (a.order < b.order) return -1;
+          return 0;
+        });
+
+        return { ...optionSet, items };
+      });
+
+      setOptionSets(setList);
     }
   }, [product]);
 
@@ -95,8 +114,8 @@ export default function ProductDrawer() {
             </div>
           </div>
 
-          {product?.optionSets &&
-            product.optionSets.map((optionSet) => (
+          {!!optionSets.length &&
+            optionSets.map((optionSet) => (
               <div key={optionSet.id} className="w-full px-6 pb-4">
                 <div className="rounded shadow">
                   <header className="rounded-t bg-dark px-6 py-4">
@@ -120,13 +139,16 @@ export default function ProductDrawer() {
                                 )}
                               </figure>
                               <div className="flex-grow">
-                                <p className="font-display text-yellow-400">{item.optionSetItem.name}</p>
-                                <p className="text-sm font-bold text-light">
-                                  {item.price && (
-                                    <span className="mr-2 inline-block font-sans text-xs text-light text-opacity-80">
-                                      (+{currencyFormat(item.price)})
+                                <p className="font-display text-sm text-yellow-400">{item.optionSetItem.name}</p>
+                                {hasDiscount && (
+                                  <p className="mb-1 text-xs text-gray-200">
+                                    antes{' '}
+                                    <span className="text-light text-opacity-50 line-through">
+                                      {currencyFormat((product?.price || 0) + (item.price || 0))}
                                     </span>
-                                  )}
+                                  </p>
+                                )}
+                                <p className="text-sm font-bold text-light">
                                   {currencyFormat(base + (item.price || 0))}
                                 </p>
                               </div>
