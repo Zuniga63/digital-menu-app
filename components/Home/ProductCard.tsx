@@ -12,13 +12,34 @@ interface Props {
 }
 export default function ProductCard({ product, imagePriority }: Props) {
   const { image, price, hasDiscount, priceWithDiscount } = product;
+
+  //---------------------------------------------------------------------------
+  // STATE
+  //---------------------------------------------------------------------------
   const [percentage, setPercentage] = useState('');
+  const [hasVariablePrice, setHasVariablePrice] = useState(false);
+  const [hasOptions, setHasOptions] = useState(false);
+
+  //---------------------------------------------------------------------------
+  // METHODS
+  //---------------------------------------------------------------------------
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (hasDiscount && price && priceWithDiscount) {
       const fraction = Math.round((1 - priceWithDiscount / price) * 100);
       setPercentage(`${fraction}% DCT`);
+    }
+
+    if (product.optionSets && product.optionSets.length) {
+      let variablePrice = false;
+      setHasOptions(true);
+      product.optionSets.forEach((optionSet) => {
+        const optionSetHasVariablePrice = optionSet.items.some((item) => item.price);
+        variablePrice = variablePrice || optionSetHasVariablePrice;
+      });
+
+      setHasVariablePrice(variablePrice);
     }
   }, []);
 
@@ -54,14 +75,22 @@ export default function ProductCard({ product, imagePriority }: Props) {
           </p>
         )}
       </div>
-      {!!product?.optionSets?.length && (
-        <div className="col-span-2">
-          <div className="flex justify-start">
-            <div className="relative -left-4 scale-75 transform rounded border border-green-900 bg-green-800 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
-              <List size={16} className="inline-block" /> Tiene opciones.{' '}
+
+      {hasOptions && (
+        <>
+          {hasVariablePrice && (
+            <p className="col-span-2 text-xs text-light">
+              * El precio de este producto puede variar segun la opción elegida.
+            </p>
+          )}
+          <div className="col-span-2">
+            <div className="flex justify-start">
+              <div className="relative -left-4 scale-75 transform rounded border border-green-900 bg-green-800 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
+                <List size={16} className="inline-block" /> Tiene opciones.{' '}
+              </div>
             </div>
           </div>
-        </div>
+        </>
       )}
       {product.isNew && (
         <div className="absolute top-2 right-2 scale-75 transform rounded border border-red-700 bg-red-600 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
