@@ -5,6 +5,7 @@ import { List } from 'tabler-icons-react';
 import { useAppDispatch } from 'store/hooks';
 import { showProduct } from 'store/reducers/Home/creators';
 import currencyFormat from 'utils/currencyFormat';
+import axios from 'axios';
 
 interface Props {
   product: IProductHome;
@@ -43,11 +44,17 @@ export default function ProductCard({ product, imagePriority }: Props) {
     }
   }, []);
 
+  const clickHandler = () => {
+    const url = `/products/${product.id}/add-view`;
+    dispatch(showProduct(product));
+    axios.put(url);
+  };
+
   return (
     <div
       className="product relative grid grid-cols-auto-fr gap-3 border-b border-gray-500 pt-8 pb-4 pr-4 pl-4 md:rounded md:border-none md:shadow md:shadow-gray-400"
       key={product.id}
-      onClick={() => dispatch(showProduct(product))}
+      onClick={clickHandler}
       role="presentation"
     >
       {image && (
