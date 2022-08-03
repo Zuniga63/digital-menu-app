@@ -3,11 +3,11 @@ import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import { toast } from 'react-toastify';
 
-import { resetStoreState, storeCategory } from 'store/reducers/CategoryReducer/actionCreators';
+import { resetStoreState, storeCategory, updateCategory } from 'store/reducers/CategoryReducer/actionCreators';
 
 import Image from 'next/image';
 import { InputWrapper, Input, Textarea, Checkbox } from '@mantine/core';
-import { Trash, Database } from 'tabler-icons-react';
+import { Trash, Database, Edit } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
 import CustomImageDropzone from '../CustomImageDropzone';
 
@@ -15,18 +15,23 @@ interface Props {
   onCloseModal?(): void;
 }
 export default function CategoryForm({ onCloseModal }: Props) {
+  //-----------------------------------------------------------------------------------------------------------------
+  // STATE
+  //-----------------------------------------------------------------------------------------------------------------
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null | undefined>(null);
   const [imagePreview, setImagePreview] = useState('');
   const [isEnabled, setIsEnabled] = useState(true);
   const [validations, setValidations] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const {
-    storeLoading: loading,
-    storeError: error,
-    storeIsSuccess: success,
-  } = useAppSelector(({ CategoryReducer }) => CategoryReducer);
+  //---------------------------------------------------------------------------
+  // STORE
+  //---------------------------------------------------------------------------
+  const { categoryToUpdate, storeLoading, storeError, storeIsSuccess, updateLoading, updateError, updateIsSuccess } =
+    useAppSelector(({ CategoryReducer }) => CategoryReducer);
 
   const dispatch = useAppDispatch();
 
@@ -38,15 +43,17 @@ export default function CategoryForm({ onCloseModal }: Props) {
   };
 
   const resetForm = () => {
-    if (!loading) {
+    if (!storeLoading || !updateLoading) {
       if (onCloseModal) onCloseModal();
-      setName('');
-      setDescription('');
-      setImage(null);
-      setImagePreview('');
-      setIsEnabled(true);
+      setTimeout(() => {
+        setName('');
+        setDescription('');
+        setImage(null);
+        setImagePreview('');
+        setIsEnabled(true);
 
-      dispatch(resetStoreState());
+        dispatch(resetStoreState());
+      }, 200);
     }
   };
 
@@ -60,23 +67,60 @@ export default function CategoryForm({ onCloseModal }: Props) {
     }
     form.append('isEnabled', JSON.stringify(isEnabled));
 
-    dispatch(storeCategory(form));
+    if (isUpdating && categoryToUpdate) {
+      dispatch(updateCategory(form, categoryToUpdate.id));
+    } else {
+      dispatch(storeCategory(form));
+    }
   };
 
+  //---------------------------------------------------------------------------
+  // USE EFFECTS
+  //---------------------------------------------------------------------------
+  /**
+   * This useEffect is use for mount category to update
+   */
   useEffect(() => {
-    if (error) {
-      setValidations(error.validationErrors);
-      toast.error(error.message);
+    if (categoryToUpdate) {
+      setName(categoryToUpdate.name);
+      setDescription(categoryToUpdate.description || '');
+      setImagePreview(categoryToUpdate.image?.url || '');
+      setIsEnabled(categoryToUpdate.isEnabled);
+      setIsUpdating(true);
     }
-  }, [error]);
+  }, [categoryToUpdate]);
 
   useEffect(() => {
-    if (success) {
-      const message = `La categoría: ${name} fue registrada con éxito.`;
+    setLoading(storeLoading || updateLoading);
+  }, [storeLoading, updateLoading]);
+
+  useEffect(() => {
+    let errorValidations = null;
+    let message = '';
+
+    if (storeError || updateError) {
+      if (storeError) {
+        errorValidations = storeError.validationErrors;
+        message = storeError.message;
+      } else {
+        errorValidations = updateError.validationErrors;
+        message = updateError.message;
+      }
+      setValidations(errorValidations);
+      toast.error(message);
+    }
+  }, [storeError, updateError]);
+
+  useEffect(() => {
+    if (storeIsSuccess || updateIsSuccess) {
+      const message = storeIsSuccess
+        ? `La categoría: ${name} fue registrada con éxito.`
+        : `La categoría fue actualizada con éxito`;
+
       toast.success(message);
       resetForm();
     }
-  }, [success]);
+  }, [storeIsSuccess, updateIsSuccess]);
 
   return (
     <CustomForm
@@ -84,7 +128,8 @@ export default function CategoryForm({ onCloseModal }: Props) {
       loading={loading}
       onCancel={resetForm}
       onSubmit={onSubmitHandled}
-      successButtonIcon={<Database />}
+      successButtonIcon={isUpdating ? <Edit /> : <Database />}
+      updatingForm={isUpdating}
     >
       <>
         {/* Image */}

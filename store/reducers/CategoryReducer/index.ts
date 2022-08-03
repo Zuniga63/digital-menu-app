@@ -5,6 +5,7 @@ import {
   REMOVE_CATEGORY,
   RESET_STORE_STATE,
   SET_ALL_CATEGORIES,
+  SET_CATEGORY_TO_UPDATE,
   SET_DELETE_ERROR,
   SET_DELETE_IS_SUCCESS,
   SET_DELETE_LOADING,
@@ -13,7 +14,11 @@ import {
   SET_STORE_ERROR,
   SET_STORE_IS_SUCCESS,
   SET_STORE_LOADING,
+  SET_UPDATE_ERROR,
+  SET_UPDATE_IS_SUCCESS,
+  SET_UPDATE_LOADING,
   SET_UPDATING_STATE,
+  UPDATE_CATEGORY,
   UPDATE_CATEGORY_STATE,
 } from './actions';
 
@@ -23,7 +28,12 @@ export interface ICategoryState {
   storeLoading: boolean;
   storeError?: any;
   storeIsSuccess: boolean;
+
+  categoryToUpdate?: ICategory;
   updateLoading: boolean;
+  updateError?: any;
+  updateIsSuccess: boolean;
+
   deleteLoading: string;
   deleteIsSuccess: boolean;
   deleteError: string;
@@ -34,11 +44,17 @@ export interface ICategoryState {
 
 const initialState: ICategoryState = {
   categories: [],
+
   loading: false,
   storeLoading: false,
   storeError: undefined,
   storeIsSuccess: false,
+
+  categoryToUpdate: undefined,
   updateLoading: false,
+  updateError: undefined,
+  updateIsSuccess: false,
+
   deleteLoading: '',
   deleteIsSuccess: false,
   deleteError: '',
@@ -60,11 +76,6 @@ export default function CategoryReducer(state = initialState, action: IAction): 
         categories: action.payload,
         reload: false,
       };
-    case SET_STORE_LOADING:
-      return {
-        ...state,
-        storeLoading: action.payload,
-      };
     case ADD_CATEGORY: {
       const { categories } = state;
       return {
@@ -72,6 +83,34 @@ export default function CategoryReducer(state = initialState, action: IAction): 
         categories: [...categories, action.payload],
       };
     }
+    case UPDATE_CATEGORY: {
+      const newCategory: ICategory = action.payload;
+      const list = state.categories.map((category) => {
+        if (category.id === newCategory.id) {
+          return { ...category, ...newCategory };
+        }
+
+        return category;
+      });
+
+      return {
+        ...state,
+        categories: list,
+      };
+    }
+    case REMOVE_CATEGORY: {
+      const filter = state.categories.filter((item) => item.id !== action.payload);
+
+      return {
+        ...state,
+        categories: [...filter],
+      };
+    }
+    case SET_STORE_LOADING:
+      return {
+        ...state,
+        storeLoading: action.payload,
+      };
     case SET_STORE_ERROR:
       return {
         ...state,
@@ -80,6 +119,7 @@ export default function CategoryReducer(state = initialState, action: IAction): 
     case SET_STORE_IS_SUCCESS:
       return {
         ...state,
+        storeLoading: false,
         storeIsSuccess: action.payload,
       };
     case RESET_STORE_STATE:
@@ -88,6 +128,10 @@ export default function CategoryReducer(state = initialState, action: IAction): 
         storeError: undefined,
         storeLoading: false,
         storeIsSuccess: false,
+        categoryToUpdate: undefined,
+        updateLoading: false,
+        updateError: undefined,
+        updateIsSuccess: false,
       };
     case SET_DELETE_LOADING:
       return {
@@ -104,14 +148,6 @@ export default function CategoryReducer(state = initialState, action: IAction): 
         ...state,
         deleteError: action.payload,
       };
-    case REMOVE_CATEGORY: {
-      const filter = state.categories.filter((item) => item.id !== action.payload);
-
-      return {
-        ...state,
-        categories: [...filter],
-      };
-    }
     case SET_RELOAD:
       return {
         ...state,
@@ -136,6 +172,32 @@ export default function CategoryReducer(state = initialState, action: IAction): 
       return {
         ...state,
         categories: list,
+      };
+    }
+    case SET_CATEGORY_TO_UPDATE: {
+      return {
+        ...state,
+        categoryToUpdate: action.payload,
+      };
+    }
+    case SET_UPDATE_LOADING: {
+      return {
+        ...state,
+        updateLoading: action.payload,
+      };
+    }
+    case SET_UPDATE_ERROR: {
+      return {
+        ...state,
+        updateError: action.payload,
+      };
+    }
+    case SET_UPDATE_IS_SUCCESS: {
+      return {
+        ...state,
+        updateLoading: false,
+        updateError: undefined,
+        updateIsSuccess: action.payload,
       };
     }
     default:

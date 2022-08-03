@@ -9,6 +9,7 @@ import {
   REMOVE_CATEGORY,
   RESET_STORE_STATE,
   SET_ALL_CATEGORIES,
+  SET_CATEGORY_TO_UPDATE,
   SET_DELETE_ERROR,
   SET_DELETE_IS_SUCCESS,
   SET_DELETE_LOADING,
@@ -17,12 +18,19 @@ import {
   SET_STORE_ERROR,
   SET_STORE_IS_SUCCESS,
   SET_STORE_LOADING,
+  SET_UPDATE_ERROR,
+  SET_UPDATE_IS_SUCCESS,
+  SET_UPDATE_LOADING,
   SET_UPDATING_STATE,
+  UPDATE_CATEGORY,
   UPDATE_CATEGORY_STATE,
 } from './actions';
 import { ICategory } from '../interfaces';
 
 const baseUrl = '/product-categories';
+const formDataOptions = {
+  headers: { 'Content-Type': 'multipart/form-data' },
+};
 
 export interface IAllCategoriesResponse {
   ok: boolean;
@@ -61,16 +69,11 @@ export const storeCategory = (formData: FormData): AppThunkAction => {
   return async (dispatch) => {
     try {
       dispatch(actionBody(SET_STORE_LOADING, true));
-      const url = `${baseUrl}`;
 
-      const res = await axios.post(url, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      const res = await axios.post(baseUrl, formData, formDataOptions);
       const { category, ok } = res.data;
 
       if (ok && category) {
-        /* const message = `La categoría: ${category.name} fue registrada con éxito.`;
-        toast.success(message); */
         dispatch(actionBody(ADD_CATEGORY, category));
         dispatch(actionBody(SET_STORE_ERROR, undefined));
         dispatch(actionBody(SET_STORE_IS_SUCCESS, true));
@@ -80,7 +83,6 @@ export const storeCategory = (formData: FormData): AppThunkAction => {
       const { response, request } = error;
       if (response) {
         const { data: errorData } = response;
-        /* toast.error(errorData.message); */
         dispatch(actionBody(SET_STORE_ERROR, errorData));
       } else if (request) {
         toast.error('Error al realizar la petición HTTP');
@@ -91,6 +93,39 @@ export const storeCategory = (formData: FormData): AppThunkAction => {
       }
     } finally {
       dispatch(actionBody(SET_STORE_LOADING, false));
+    }
+  };
+};
+
+export const updateCategory = (formData: FormData, categoryId: string): AppThunkAction => {
+  const url = `${baseUrl}/${categoryId}`;
+
+  return async (dispatch) => {
+    try {
+      dispatch(actionBody(SET_UPDATE_LOADING, true));
+      const res = await axios.put(url, formData, formDataOptions);
+      const { ok, category } = res.data;
+      if (ok && category) {
+        dispatch(actionBody(SET_UPDATE_IS_SUCCESS, true));
+        dispatch(actionBody(UPDATE_CATEGORY, category));
+      }
+    } catch (error: any) {
+      dispatch(actionBody(SET_UPDATE_IS_SUCCESS, false));
+      const { response, request } = error;
+      if (response) {
+        const { data: errorData } = response;
+        dispatch(actionBody(SET_UPDATE_ERROR, errorData));
+      } else if (request) {
+        toast.error('Error al realizar la petición HTTP');
+        console.error(request);
+      } else {
+        toast.error('Error desconocido al lanzar la petición.');
+        console.error(error);
+      }
+    } finally {
+      setTimeout(() => {
+        dispatch(actionBody(SET_UPDATE_IS_SUCCESS, false));
+      }, 200);
     }
   };
 };
@@ -159,4 +194,8 @@ export const updateCategoryState = (categoryId: string, enabled: boolean): AppTh
       dispatch(actionBody(SET_UPDATING_STATE, ''));
     }
   };
+};
+
+export const mountCategoryToStore = (category: ICategory) => (dispatch: Dispatch) => {
+  return dispatch(actionBody(SET_CATEGORY_TO_UPDATE, category));
 };

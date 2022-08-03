@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { ICategory } from 'store/reducers/interfaces';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
-import { deleteCategory, updateCategoryState } from 'store/reducers/CategoryReducer/actionCreators';
+import {
+  deleteCategory,
+  mountCategoryToStore,
+  updateCategoryState,
+} from 'store/reducers/CategoryReducer/actionCreators';
 
 import Image from 'next/image';
-import { Photo, Package, Eye, Trash, EyeOff } from 'tabler-icons-react';
+import { Photo, Package, Eye, Trash, EyeOff, Edit } from 'tabler-icons-react';
 import { Switch, Button } from '@mantine/core';
 import { toast } from 'react-toastify';
 
 interface Props {
   category: ICategory;
+  openModal?(): void;
 }
 
-export default function CategoryCard({ category }: Props) {
+export default function CategoryCard({ category, openModal }: Props) {
   const { image } = category;
   const [stateLoading, setStateLoading] = useState(false);
 
@@ -43,6 +48,11 @@ export default function CategoryCard({ category }: Props) {
 
   const destroy = (): void => {
     dispatch(deleteCategory(category.id));
+  };
+
+  const update = () => {
+    if (openModal) openModal();
+    dispatch(mountCategoryToStore(category));
   };
 
   // ---------------------------------------------------
@@ -106,7 +116,12 @@ export default function CategoryCard({ category }: Props) {
           </div>
         </div>
       </div>
-      <footer className="flex justify-end px-5">
+
+      <footer className="flex justify-between px-2">
+        <Button leftIcon={<Edit size={16} />} size="xs" loading={deleteLoading === category.id} onClick={update}>
+          Actualizar
+        </Button>
+
         <Button
           leftIcon={<Trash size={16} />}
           color="red"
