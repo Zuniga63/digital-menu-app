@@ -17,6 +17,7 @@ import PlusButtom from 'components/PlusButton';
 import { Modal } from '@mantine/core';
 import ProductForm from 'components/Products/ProductForm';
 import ProductCard from 'components/Products/ProductCard';
+import UpdateForm from 'components/Products/UpdateForm';
 
 interface Props {
   categories: ICategory[];
@@ -68,9 +69,11 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   // STATE
   //-----------------------------------------------------------------
   const [products, setProducts] = useState(productData);
+  const [productToUpdate, setProductToUpdate] = useState<IProduct | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
   const [storeLoading, setStoreLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState('');
+  const [updateLoading, setUpdateLoading] = useState(false);
 
   //-----------------------------------------------------------------
   // METHODS
@@ -91,8 +94,11 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   };
 
   const closeModal = (): void => {
-    if (!storeLoading) {
+    if (!storeLoading && !updateLoading) {
       setModalOpened(false);
+      setTimeout(() => {
+        setProductToUpdate(null);
+      }, 200);
     }
   };
 
@@ -118,6 +124,11 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     }
   };
 
+  const mountProduct = (product: IProduct): void => {
+    setProductToUpdate(product);
+    openModal();
+  };
+
   //-----------------------------------------------------------------
   // RENDER
   //-----------------------------------------------------------------
@@ -128,21 +139,39 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
         <LayoutHeader>Listado de productos</LayoutHeader>
         <div className="flex flex-col gap-y-4">
           {products.map((item) => (
-            <ProductCard product={item} deleteLoading={deleteLoading} key={item.id} onDelete={deleteProduct} />
+            <ProductCard
+              product={item}
+              deleteLoading={deleteLoading}
+              key={item.id}
+              onDelete={deleteProduct}
+              onUpdate={mountProduct}
+            />
           ))}
         </div>
       </AdminLayout>
 
       <Modal opened={modalOpened} onClose={closeModal}>
-        <ProductForm
-          loading={storeLoading}
-          setLoading={setStoreLoading}
-          apiUrl={apiUrl}
-          onCloseModal={closeModal}
-          categories={categories}
-          optionSets={optionSets}
-          onSuccess={getProducts}
-        />
+        {!productToUpdate ? (
+          <ProductForm
+            loading={storeLoading}
+            setLoading={setStoreLoading}
+            apiUrl={apiUrl}
+            onCloseModal={closeModal}
+            categories={categories}
+            optionSets={optionSets}
+            onSuccess={getProducts}
+          />
+        ) : (
+          <UpdateForm
+            product={productToUpdate}
+            loading={updateLoading}
+            setLoading={setUpdateLoading}
+            apiUrl={apiUrl}
+            onCloseModal={closeModal}
+            categories={categories}
+            onSuccess={getProducts}
+          />
+        )}
       </Modal>
 
       <PlusButtom onClick={openModal} />

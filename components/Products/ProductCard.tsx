@@ -2,16 +2,17 @@ import React, { useState } from 'react';
 import { IProduct } from 'store/reducers/interfaces';
 
 import Image from 'next/image';
-import { Photo, Category, Eye, Trash, List } from 'tabler-icons-react';
+import { Photo, Category, Eye, Trash, List, Edit } from 'tabler-icons-react';
 import { Switch, Loader, Button } from '@mantine/core';
 
 interface Props {
   product: IProduct;
   deleteLoading: string;
   onDelete?(id: string): Promise<void>;
+  onUpdate?(product: IProduct): void;
 }
 
-export default function ProductCard({ product, deleteLoading, onDelete }: Props) {
+export default function ProductCard({ product, deleteLoading, onDelete, onUpdate }: Props) {
   const { image } = product;
 
   // ---------------------------------------------------
@@ -35,6 +36,9 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
 
   const destroy = (): void => {
     if (onDelete) onDelete(product.id);
+  };
+  const update = (): void => {
+    if (onUpdate) onUpdate(product);
   };
 
   // ---------------------------------------------------
@@ -70,7 +74,12 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
             <h3 className="text-center text-lg font-bold tracking-widest text-gray-800">{product.name}</h3>
           </header>
           <div className="mb-2 min-h-[40px]">
-            <p className="text-sm">{product.description ? description : noDescription}</p>
+            <p className="mb-2 text-sm">{product.description ? description : noDescription}</p>
+            <p className="text-xs italic text-gray-600">
+              {!product.views && <span>No se han realizado visualizaciones</span>}
+              {product.views === 1 && <span>1 Visita</span>}
+              {product.views > 1 && <span> {product.views} Visitas</span>}
+            </p>
           </div>
         </div>
 
@@ -100,7 +109,11 @@ export default function ProductCard({ product, deleteLoading, onDelete }: Props)
           </div>
         </div>
       </div>
-      <footer className="flex justify-end px-5">
+      <footer className="flex justify-between px-3">
+        <Button leftIcon={<Edit size={16} />} size="xs" loading={deleteLoading === product.id} onClick={update}>
+          Actualizar
+        </Button>
+
         <Button
           leftIcon={<Trash size={16} />}
           color="red"

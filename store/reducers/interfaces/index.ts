@@ -70,14 +70,15 @@ export interface IOptionSet {
 
 export interface IProduct {
   id: string;
-  category: ICategory;
+  category?: ICategory;
   optionSets: any[];
   name: string;
   description?: string;
   image?: IImage;
   price: number;
   hasDiscount: boolean;
-  isNew: boolean;
+  priceWithDiscount?: number;
+  productIsNew: boolean;
   hasVariant: boolean;
   varianTitle?: string;
   published: boolean;
@@ -144,7 +145,7 @@ export interface IProductHome {
   price: number;
   hasDiscount: boolean;
   priceWithDiscount?: number;
-  isNew: boolean;
+  productIsNew: boolean;
   hasVariant: boolean;
   varianTitle?: string;
   published: boolean;
