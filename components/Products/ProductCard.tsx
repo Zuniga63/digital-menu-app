@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IProduct } from 'store/reducers/interfaces';
+import { IProduct, IProductOptionSet } from 'store/reducers/interfaces';
 
 import Image from 'next/image';
 import { Photo, Category, Eye, Trash, List, Edit } from 'tabler-icons-react';
@@ -9,10 +9,11 @@ interface Props {
   product: IProduct;
   deleteLoading: string;
   onDelete?(id: string): Promise<void>;
-  onUpdate?(product: IProduct): void;
+  onUpdate(product: IProduct): void;
+  onUpdateOptionSet(product: IProduct, optionSet: IProductOptionSet): void;
 }
 
-export default function ProductCard({ product, deleteLoading, onDelete, onUpdate }: Props) {
+export default function ProductCard({ product, deleteLoading, onDelete, onUpdate, onUpdateOptionSet }: Props) {
   const { image } = product;
 
   // ---------------------------------------------------
@@ -97,12 +98,14 @@ export default function ProductCard({ product, deleteLoading, onDelete, onUpdate
             {!!product.optionSets?.length && (
               <div className="flex justify-start">
                 {product.optionSets.map((item) => (
-                  <div
+                  <button
+                    type="button"
                     className="flex items-center gap-2 rounded-full bg-blue-400 py-1 px-3 text-gray-700"
                     key={item.id}
+                    onClick={() => onUpdateOptionSet(product, item)}
                   >
                     <List size={16} /> <span className="text-xs font-bold tracking-wide">{item.title}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}

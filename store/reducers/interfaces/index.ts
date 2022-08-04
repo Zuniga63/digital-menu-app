@@ -68,10 +68,39 @@ export interface IOptionSet {
   _id: string;
 }
 
+export interface IProductOptionItem {
+  id: string;
+  optionSetItem: any;
+  order: number;
+  published: boolean;
+  price?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface IProductOptionSet {
+  id: string;
+  product: string;
+  optionSet: string;
+  items: IProductOptionItem[];
+  title: string;
+  required: boolean;
+  published: boolean;
+  multiple: boolean;
+  minCount?: number;
+  maxCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
 export interface IProduct {
   id: string;
   category?: ICategory;
-  optionSets: any[];
+  optionSets: IProductOptionSet[];
   name: string;
   description?: string;
   image?: IImage;

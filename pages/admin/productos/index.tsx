@@ -9,6 +9,7 @@ import {
   ICategory,
   IOptionSet,
   IProduct,
+  IProductOptionSet,
 } from 'store/reducers/interfaces';
 
 import AdminLayout from 'components/Layouts/AdminLayout';
@@ -18,6 +19,7 @@ import { Modal } from '@mantine/core';
 import ProductForm from 'components/Products/ProductForm';
 import ProductCard from 'components/Products/ProductCard';
 import UpdateForm from 'components/Products/UpdateForm';
+import OptionSetCard from 'components/Products/OptionSetCard';
 
 interface Props {
   categories: ICategory[];
@@ -70,18 +72,21 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   //-----------------------------------------------------------------
   const [products, setProducts] = useState(productData);
   const [productToUpdate, setProductToUpdate] = useState<IProduct | null>(null);
+  const [optionSetToUpdate, setOptionSetToUpdate] = useState<IProductOptionSet | null>(null);
+
   const [modalOpened, setModalOpened] = useState(false);
   const [storeLoading, setStoreLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState('');
   const [updateLoading, setUpdateLoading] = useState(false);
+  const [optionSetUpdated, setOptionSetUpdated] = useState(false);
+
+  const [storeForm, setStoreForm] = useState(true);
+  const [updateForm, setUpdateForm] = useState(false);
+  const [optionForm, setOptionForm] = useState(false);
 
   //-----------------------------------------------------------------
   // METHODS
   //-----------------------------------------------------------------
-  const openModal = (): void => {
-    setModalOpened(true);
-  };
-
   const getProducts = async (): Promise<void> => {
     try {
       const res = await axios.get(apiUrl);
@@ -93,11 +98,22 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     }
   };
 
+  const openModal = (): void => {
+    setModalOpened(true);
+  };
+
   const closeModal = (): void => {
     if (!storeLoading && !updateLoading) {
       setModalOpened(false);
+      if (optionSetUpdated) getProducts();
       setTimeout(() => {
         setProductToUpdate(null);
+        setOptionSetToUpdate(null);
+
+        setStoreForm(true);
+        setUpdateForm(false);
+        setOptionForm(false);
+        setOptionSetUpdated(false);
       }, 200);
     }
   };
@@ -124,9 +140,23 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     }
   };
 
-  const mountProduct = (product: IProduct): void => {
+  const updateProduct = (product: IProduct): void => {
     setProductToUpdate(product);
+    setStoreForm(false);
+    setUpdateForm(true);
     openModal();
+  };
+
+  const updateOptionSet = (product: IProduct, optionSet: IProductOptionSet): void => {
+    setProductToUpdate(product);
+    setOptionSetToUpdate(optionSet);
+    setStoreForm(false);
+    setOptionForm(true);
+    openModal();
+  };
+
+  const onOptionSetUpdatedHandler = () => {
+    setOptionSetUpdated(true);
   };
 
   //-----------------------------------------------------------------
@@ -144,14 +174,15 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
               deleteLoading={deleteLoading}
               key={item.id}
               onDelete={deleteProduct}
-              onUpdate={mountProduct}
+              onUpdate={updateProduct}
+              onUpdateOptionSet={updateOptionSet}
             />
           ))}
         </div>
       </AdminLayout>
 
       <Modal opened={modalOpened} onClose={closeModal}>
-        {!productToUpdate ? (
+        {storeForm && (
           <ProductForm
             loading={storeLoading}
             setLoading={setStoreLoading}
@@ -161,7 +192,9 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
             optionSets={optionSets}
             onSuccess={getProducts}
           />
-        ) : (
+        )}
+
+        {updateForm && productToUpdate && (
           <UpdateForm
             product={productToUpdate}
             loading={updateLoading}
@@ -170,6 +203,15 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
             onCloseModal={closeModal}
             categories={categories}
             onSuccess={getProducts}
+          />
+        )}
+
+        {optionForm && productToUpdate && optionSetToUpdate && (
+          <OptionSetCard
+            product={productToUpdate}
+            optionSet={optionSetToUpdate}
+            apiUrl={apiUrl}
+            onUpdate={onOptionSetUpdatedHandler}
           />
         )}
       </Modal>
