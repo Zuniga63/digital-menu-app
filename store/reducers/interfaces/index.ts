@@ -49,6 +49,7 @@ export interface IOptionItem {
   id: string;
   optionSet: string;
   name: string;
+  image?: IImage;
   order: number;
   isEnabled: boolean;
   createdAt: Date;
@@ -68,16 +69,46 @@ export interface IOptionSet {
   _id: string;
 }
 
+export interface IProductOptionItem {
+  id: string;
+  optionSetItem: any;
+  order: number;
+  published: boolean;
+  price?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
+export interface IProductOptionSet {
+  id: string;
+  product: string;
+  optionSet: string;
+  items: IProductOptionItem[];
+  title: string;
+  required: boolean;
+  published: boolean;
+  multiple: boolean;
+  minCount?: number;
+  maxCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v: number;
+  _id: string;
+}
+
 export interface IProduct {
   id: string;
-  category: ICategory;
-  optionSets: any[];
+  category?: ICategory;
+  optionSets: IProductOptionSet[];
   name: string;
   description?: string;
   image?: IImage;
   price: number;
   hasDiscount: boolean;
-  isNew: boolean;
+  priceWithDiscount?: number;
+  productIsNew: boolean;
   hasVariant: boolean;
   varianTitle?: string;
   published: boolean;
@@ -144,7 +175,7 @@ export interface IProductHome {
   price: number;
   hasDiscount: boolean;
   priceWithDiscount?: number;
-  isNew: boolean;
+  productIsNew: boolean;
   hasVariant: boolean;
   varianTitle?: string;
   published: boolean;

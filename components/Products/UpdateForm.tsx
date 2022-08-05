@@ -1,43 +1,42 @@
 import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, useState } from 'react';
 
 import CustomForm from 'components/CustomForm';
-import { Database, Trash } from 'tabler-icons-react';
+import { Edit, Trash } from 'tabler-icons-react';
 import Image from 'next/image';
-import { InputWrapper, Input, Textarea, Checkbox, Select, SelectItem, MultiSelect, NumberInput } from '@mantine/core';
+import { InputWrapper, Input, Textarea, Checkbox, Select, SelectItem, NumberInput } from '@mantine/core';
 import CustomImageDropzone from 'components/CustomImageDropzone';
-import { ICategory, IOptionSet } from 'store/reducers/interfaces';
+import { ICategory, IProduct } from 'store/reducers/interfaces';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 interface Props {
+  product?: IProduct;
   loading: boolean;
   apiUrl: string;
   categories: ICategory[];
-  optionSets: IOptionSet[];
   setLoading: Dispatch<SetStateAction<boolean>>;
   onCloseModal?(): void;
   onSuccess(): void;
 }
 
-export default function ProductForm({
+export default function UpdateForm({
+  product,
   loading,
   apiUrl,
   setLoading,
   onCloseModal,
   onSuccess,
   categories,
-  optionSets,
 }: Props) {
-  //-----------------------------------------------------------------
+  //---------------------------------------------------------------------------
   // STATE
-  //-----------------------------------------------------------------
+  //---------------------------------------------------------------------------
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null | undefined>(null);
   const [imagePreview, setImagePreview] = useState('');
   const [categoryId, setCategoryId] = useState<string | null>('');
-  const [optionSetsIds, setOptionSetsIds] = useState<string[] | undefined>([]);
-  const [price, setPrice] = useState<number | undefined>(undefined);
+  const [price, setPrice] = useState<number | undefined>();
   const [hasDiscount, setHasDiscount] = useState(false);
   const [priceWithDiscount, setPriceWithDiscount] = useState<number | undefined>(undefined);
   const [isNew, setIsNew] = useState(false);
@@ -61,7 +60,6 @@ export default function ProductForm({
     }
 
     if (categoryId) data.append('categoryId', categoryId);
-    if (optionSetsIds) data.append('optionSetIDs', JSON.stringify(optionSetsIds));
 
     data.append('productIsNew', String(isNew));
     data.append('published', String(published));
@@ -74,17 +72,22 @@ export default function ProductForm({
       onCloseModal();
     }
   };
+
   const onSubmitHandled = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
     setLoading(true);
     const data = getSubmitData();
 
     try {
-      const res = await axios.post(apiUrl, data, { headers: { 'Content-Type': 'multipart/form-data' } });
-      if (res.data.ok) {
-        onSuccess();
-        toast.success('Producto creado');
-        resetForm();
+      if (product) {
+        const res = await axios.put(`${apiUrl}/${product.id}`, data, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if (res.data.ok) {
+          onSuccess();
+          toast.success('Producto actualizado.');
+          resetForm();
+        }
       }
     } catch (error: any) {
       const { response } = error;
@@ -110,23 +113,31 @@ export default function ProductForm({
     return categories.map((item) => ({ value: item.id, label: item.name }));
   };
 
-  const getOptionSetData = (): SelectItem[] => optionSets.map((item) => ({ value: item.id, label: item.name }));
-
   //-----------------------------------------------------------------
   // USE EFECCT
   //-----------------------------------------------------------------
-  useEffect(() => setPriceWithDiscount(price), [price]);
+  useEffect(() => {
+    if (product) {
+      setName(product.name);
+      setDescription(product.description || '');
+      setImagePreview(product.image?.url || '');
+      setPrice(product.price);
+      setHasDiscount(product.hasDiscount);
+      setPriceWithDiscount(product.priceWithDiscount);
+      setIsNew(product.productIsNew);
+      setPublished(product.published);
+      setCategoryId(product.category?.id || '');
+    }
+  }, [product]);
 
-  //-----------------------------------------------------------------
-  // RENDER
-  //-----------------------------------------------------------------
   return (
     <CustomForm
-      title="Registrar Producto"
+      title="Actualizar Producto"
       onCancel={resetForm}
       loading={loading}
-      successButtonIcon={<Database />}
+      successButtonIcon={<Edit />}
       onSubmit={onSubmitHandled}
+      updatingForm
     >
       <>
         {/* Image */}
@@ -230,17 +241,6 @@ export default function ProductForm({
           searchable
           clearable
           error={errors?.categoryId?.message}
-        />
-
-        {/* Option Sets */}
-        <MultiSelect
-          label="Set de opciones"
-          data={getOptionSetData()}
-          disabled={loading}
-          value={optionSetsIds}
-          onChange={(value) => setOptionSetsIds(value)}
-          placeholder="Selecciona una set de opciones."
-          searchable
         />
 
         <div className="flex justify-between">

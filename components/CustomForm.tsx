@@ -9,6 +9,7 @@ interface Props {
   children?: ReactNode;
   successButtonIcon?: ReactNode;
   cancelButtonIcon?: ReactNode;
+  updatingForm?: boolean;
 }
 
 export default function CustomForm({
@@ -19,6 +20,7 @@ export default function CustomForm({
   children,
   successButtonIcon,
   cancelButtonIcon,
+  updatingForm = false,
 }: Props) {
   return (
     <form className="-mt-11" onSubmit={onSubmit}>
@@ -34,7 +36,7 @@ export default function CustomForm({
         </Button>
 
         <Button type="submit" leftIcon={successButtonIcon} disabled={loading} loading={loading}>
-          Registrar
+          {updatingForm ? 'Actualizar' : 'Registrar'}
         </Button>
       </footer>
     </form>

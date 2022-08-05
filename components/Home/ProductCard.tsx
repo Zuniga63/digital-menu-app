@@ -99,7 +99,7 @@ export default function ProductCard({ product, imagePriority }: Props) {
           </div>
         </>
       )}
-      {product.isNew && (
+      {product.productIsNew && (
         <div className="absolute top-2 right-2 scale-75 transform rounded border border-red-700 bg-red-600 p-1 text-xs font-black tracking-widest text-light shadow-new-tag">
           New
         </div>

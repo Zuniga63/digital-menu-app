@@ -1,6 +1,6 @@
 import type { NextPage } from 'next';
 import { useState, useEffect } from 'react';
-import { getAllCategories } from 'store/reducers/CategoryReducer/actionCreators';
+import { getAllCategories, resetStoreState } from 'store/reducers/CategoryReducer/actionCreators';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 
 import AdminLayout from 'components/Layouts/AdminLayout';
@@ -12,14 +12,21 @@ import withAuth from 'utils/withAuth';
 
 const CategoriesPage: NextPage = () => {
   const [modalOpened, setModalOpened] = useState(false);
-  const { loading, storeLoading, categories, reload } = useAppSelector(({ CategoryReducer }) => CategoryReducer);
+  const { loading, storeLoading, updateLoading, categories, reload } = useAppSelector(
+    ({ CategoryReducer }) => CategoryReducer
+  );
 
   const dispatch = useAppDispatch();
   const isEmpty = !loading && !categories.length;
 
+  const openModal = () => {
+    setModalOpened(true);
+  };
+
   const closeModal = (): void => {
-    if (!storeLoading) {
+    if (!storeLoading && !updateLoading) {
       setModalOpened(false);
+      dispatch(resetStoreState());
     }
   };
 
@@ -40,8 +47,6 @@ const CategoriesPage: NextPage = () => {
     </p>
   );
 
-  const categoryCards = categories.map((item) => <CategoryCard key={item.id} category={item} />);
-
   return (
     <>
       <AdminLayout title="Categorías">
@@ -49,12 +54,14 @@ const CategoriesPage: NextPage = () => {
 
         <div className="mb-40 flex flex-col gap-2">
           {(loading || isEmpty) && waiting}
-          {!isEmpty && !loading && categoryCards}
+          {!isEmpty &&
+            !loading &&
+            categories.map((item) => <CategoryCard key={item.id} category={item} openModal={openModal} />)}
         </div>
       </AdminLayout>
 
       <ModalForm onClose={closeModal} opened={modalOpened} />
-      <PlusButtom onClick={() => setModalOpened(true)} />
+      <PlusButtom onClick={openModal} />
     </>
   );
 };

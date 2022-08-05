@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { ICategory } from 'store/reducers/interfaces';
-import { Photo, Package, Eye, Trash } from 'tabler-icons-react';
-import { Switch, Loader, Button } from '@mantine/core';
 import { useAppDispatch, useAppSelector } from 'store/hooks';
+import {
+  deleteCategory,
+  mountCategoryToStore,
+  updateCategoryState,
+} from 'store/reducers/CategoryReducer/actionCreators';
+
+import Image from 'next/image';
+import { Photo, Package, Eye, Trash, EyeOff, Edit } from 'tabler-icons-react';
+import { Switch, Button } from '@mantine/core';
 import { toast } from 'react-toastify';
-import { deleteCategory } from 'store/reducers/CategoryReducer/actionCreators';
 
 interface Props {
   category: ICategory;
+  openModal?(): void;
 }
 
-export default function CategoryCard({ category }: Props) {
+export default function CategoryCard({ category, openModal }: Props) {
   const { image } = category;
   const [stateLoading, setStateLoading] = useState(false);
 
@@ -19,7 +25,9 @@ export default function CategoryCard({ category }: Props) {
   // Store
   // ---------------------------------------------------
   const dispatch = useAppDispatch();
-  const { deleteLoading, deleteIsSuccess, deleteError } = useAppSelector(({ CategoryReducer }) => CategoryReducer);
+  const { deleteLoading, deleteIsSuccess, deleteError, updatingState } = useAppSelector(
+    ({ CategoryReducer }) => CategoryReducer
+  );
 
   // ---------------------------------------------------
   // REACT NODE
@@ -27,17 +35,24 @@ export default function CategoryCard({ category }: Props) {
   const description = <span className="text-gray-600">{category.description}</span>;
   const noDescription = <span className="italic text-gray-400">No tiene descripción.</span>;
 
-  const switchLabel = !stateLoading ? <Eye className="text-gray-500" /> : <Loader size={24} />;
+  const switchLabel = category.isEnabled ? <Eye className="text-blue-500" /> : <EyeOff className="text-gray-400" />;
 
   // ---------------------------------------------------
   // MENTHODS
   // ---------------------------------------------------
   const changeState = (): void => {
-    setStateLoading((current) => current);
+    if (!stateLoading) {
+      dispatch(updateCategoryState(category.id, !category.isEnabled));
+    }
   };
 
   const destroy = (): void => {
     dispatch(deleteCategory(category.id));
+  };
+
+  const update = () => {
+    if (openModal) openModal();
+    dispatch(mountCategoryToStore(category));
   };
 
   // ---------------------------------------------------
@@ -55,11 +70,19 @@ export default function CategoryCard({ category }: Props) {
     }
   }, [deleteIsSuccess, deleteError, deleteLoading]);
 
+  useEffect(() => {
+    if (updatingState === category.id) {
+      setStateLoading(true);
+    } else {
+      setStateLoading(false);
+    }
+  }, [updatingState]);
+
   return (
     <div className="relative rounded border bg-white px-4 py-6 shadow-md">
       <div className="mb-4 grid grid-cols-3 gap-x-4">
         <div className="flex flex-col items-center">
-          <figure className="relative mb-2 block aspect-square w-full overflow-hidden rounded shadow-md shadow-gray-600 ">
+          <figure className="relative mb-3 block aspect-square w-full overflow-hidden rounded shadow-md shadow-gray-600 ">
             {image ? (
               <Image src={image.url} alt={category.name} layout="fill" objectFit="cover" />
             ) : (
@@ -74,7 +97,7 @@ export default function CategoryCard({ category }: Props) {
               readOnly
               checked={category.isEnabled}
               onClick={changeState}
-              disabled={deleteLoading === category.id}
+              disabled={deleteLoading === category.id || updatingState === category.id}
             />
           </div>
         </div>
@@ -93,7 +116,12 @@ export default function CategoryCard({ category }: Props) {
           </div>
         </div>
       </div>
-      <footer className="flex justify-end px-5">
+
+      <footer className="flex justify-between px-2">
+        <Button leftIcon={<Edit size={16} />} size="xs" loading={deleteLoading === category.id} onClick={update}>
+          Actualizar
+        </Button>
+
         <Button
           leftIcon={<Trash size={16} />}
           color="red"

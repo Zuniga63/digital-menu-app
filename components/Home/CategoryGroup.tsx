@@ -17,7 +17,7 @@ export default function CategoryGroup({ category, imagePriority, imageClickHandl
     setProductList(products.filter((p) => p.published));
   }, []);
 
-  return productList.length ? (
+  return category.isEnabled && productList.length ? (
     <section>
       <header className="flex gap-3 bg-gray-dark p-4 text-gray-100">
         {image && (

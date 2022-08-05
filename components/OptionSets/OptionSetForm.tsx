@@ -2,11 +2,11 @@ import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, use
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-import { IOptionSet } from 'pages/admin/set-de-opciones/index';
+import { IOptionSet } from 'store/reducers/interfaces';
 import { Database, Plus } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
 import { InputWrapper, Input, Checkbox } from '@mantine/core';
-import OptionItemCard from './OptionItemCard';
+import OptionItemCard from './OptionItemFormCard';
 
 interface Props {
   loading: boolean;
