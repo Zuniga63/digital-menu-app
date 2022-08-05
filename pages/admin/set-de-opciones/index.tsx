@@ -2,6 +2,7 @@ import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { IOptionItem, IOptionSet } from 'store/reducers/interfaces';
 
 import AdminLayout from 'components/Layouts/AdminLayout';
 import LayoutTitle from 'components/LayoutHeader';
@@ -9,39 +10,35 @@ import { Modal } from '@mantine/core';
 import PlusButtom from 'components/PlusButton';
 import CustomForm from 'components/OptionSets/OptionSetForm';
 import OptionSetCard from 'components/OptionSets/OptionSetCard';
+import UpdateItemForm from 'components/OptionSets/UpdateItemForm';
 
-export interface IOptionItem {
-  id: string;
-  name: string;
-  optionSet: string;
-  order: number;
-  isEnabled: boolean;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-}
-
-export interface IOptionSet {
-  id: string;
-  name: string;
-  items: IOptionItem[];
-  isEnabled: boolean;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+enum FormType {
+  General,
+  UpdateItem,
 }
 
 const OptionSetsPage: NextPage = () => {
-  const [modalOpened, setModalOpened] = useState(false);
-  const [storeLoading, setStoreLoading] = useState(false);
-  const [deleteLoading, setDeleteLoading] = useState('');
   const [optionSets, setOptionSets] = useState<IOptionSet[]>([]);
+  const [optionSetItem, setOptionSetItem] = useState<IOptionItem | null>(null);
+  const [modalOpened, setModalOpened] = useState(false);
+  const [modalLoading, setModalLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState('');
+  const [formType, setFormType] = useState(FormType.General);
   const apiUrl = `/option-sets`;
 
-  const openModal = (): void => {
+  const openGeneralForm = () => {
+    setFormType(FormType.General);
+    setModalOpened(true);
+  };
+
+  const openUpdateItemForm = (optionItem: IOptionItem) => {
+    setFormType(FormType.UpdateItem);
+    setOptionSetItem(optionItem);
     setModalOpened(true);
   };
 
   const closeModal = (): void => {
-    if (!storeLoading) {
+    if (!modalLoading) {
       setModalOpened(false);
     }
   };
@@ -71,6 +68,56 @@ const OptionSetsPage: NextPage = () => {
     }
   };
 
+  const changeStateOptionItem = async (optionSetId: string, optionItemId: string, value: boolean): Promise<boolean> => {
+    try {
+      const url = `${apiUrl}/${optionSetId}/items/${optionItemId}/${value ? 'enabled' : 'disabled'}`;
+      const res = await axios.put(url);
+      const { ok, optionItem }: { ok: boolean; optionItem: IOptionItem } = res.data;
+      if (ok) {
+        const newOptionSets = optionSets.map((optionSet) => {
+          if (optionSet.id === optionSetId) {
+            const newItems = optionSet.items.map((item) => {
+              if (item.id === optionItemId) {
+                return optionItem;
+              }
+
+              return item;
+            });
+
+            return { ...optionSet, items: newItems };
+          }
+
+          return optionSet;
+        });
+
+        setOptionSets(newOptionSets);
+        toast.success(`El item ${optionItem.name} fue ${value ? 'habilitado' : 'deshabilitado'} `);
+        return optionItem.isEnabled;
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+    return !value;
+  };
+
+  const updateOptionSetItem = (optionItem: IOptionItem): void => {
+    const newOptionSets = optionSets.map((optionSet) => {
+      if (optionSet.id === optionItem.optionSet) {
+        const newItems = optionSet.items.map((item) => {
+          if (item.id === optionItem.id) {
+            return { ...item, ...optionItem };
+          }
+          return item;
+        });
+
+        return { ...optionSet, items: newItems };
+      }
+      return optionSet;
+    });
+
+    setOptionSets(newOptionSets);
+  };
+
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -96,21 +143,41 @@ const OptionSetsPage: NextPage = () => {
 
         <div className="flex flex-col gap-y-6 px-4">
           {optionSets.map((item) => (
-            <OptionSetCard key={item.id} optionSet={item} deleteLoading={deleteLoading} onDelete={deleteOptionSet} />
+            <OptionSetCard
+              key={item.id}
+              optionSet={item}
+              deleteLoading={deleteLoading}
+              onDelete={deleteOptionSet}
+              onUpdateItemState={changeStateOptionItem}
+              onUpdateItem={openUpdateItemForm}
+            />
           ))}
         </div>
       </AdminLayout>
 
       <Modal opened={modalOpened} onClose={closeModal}>
-        <CustomForm
-          loading={storeLoading}
-          apiUrl={apiUrl}
-          setLoading={setStoreLoading}
-          onCloseModal={closeModal}
-          onSuccess={addOptionSet}
-        />
+        {formType === FormType.General && (
+          <CustomForm
+            loading={modalLoading}
+            apiUrl={apiUrl}
+            setLoading={setModalLoading}
+            onCloseModal={closeModal}
+            onSuccess={addOptionSet}
+          />
+        )}
+
+        {formType === FormType.UpdateItem && optionSetItem && (
+          <UpdateItemForm
+            optionSetItem={optionSetItem}
+            apiUrl={apiUrl}
+            loading={modalLoading}
+            setLoading={setModalLoading}
+            onCloseModal={closeModal}
+            onSuccess={updateOptionSetItem}
+          />
+        )}
       </Modal>
-      <PlusButtom onClick={openModal} />
+      <PlusButtom onClick={openGeneralForm} />
     </>
   );
 };

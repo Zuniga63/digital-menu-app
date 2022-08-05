@@ -49,6 +49,7 @@ export interface IOptionItem {
   id: string;
   optionSet: string;
   name: string;
+  image?: IImage;
   order: number;
   isEnabled: boolean;
   createdAt: Date;
