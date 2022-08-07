@@ -10,6 +10,7 @@ import rtlCache from 'rtl-cache';
 
 import { MantineProvider } from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
+import LoginModal from 'components/Layouts/LoginModal';
 
 import { useAppDispatch } from 'store/hooks';
 import { SET_USER } from 'store/reducers/Auth/actions';
@@ -56,6 +57,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         draggable
         pauseOnHover
       />
+
+      <LoginModal />
     </Provider>
   );
 }

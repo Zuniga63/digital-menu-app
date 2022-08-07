@@ -1,6 +1,6 @@
 /* eslint-disable default-param-last */
 import { IAction, IUser } from '../interfaces';
-import { LOGOUT, SET_ERROR, SET_LOADING, SET_USER } from './actions';
+import { CLOSE_LOGIN, LOGOUT, OPEN_LOGIN, SET_ERROR, SET_LOADING, SET_USER } from './actions';
 
 export interface AuthStore {
   isAuth: boolean;
@@ -8,6 +8,7 @@ export interface AuthStore {
   error: null | string;
   isAdmin: boolean;
   loading: boolean;
+  loginOpened: boolean;
 }
 
 const initialState: AuthStore = {
@@ -16,10 +17,23 @@ const initialState: AuthStore = {
   error: null,
   isAdmin: false,
   loading: false,
+  loginOpened: false,
 };
 
 export default function AuthReducer(state = initialState, action: IAction): AuthStore {
   switch (action.type) {
+    case OPEN_LOGIN: {
+      return {
+        ...state,
+        loginOpened: true,
+      };
+    }
+    case CLOSE_LOGIN: {
+      return {
+        ...state,
+        loginOpened: false,
+      };
+    }
     case SET_USER:
       return {
         ...state,
@@ -39,6 +53,7 @@ export default function AuthReducer(state = initialState, action: IAction): Auth
       };
     case LOGOUT: {
       return {
+        ...state,
         isAuth: false,
         user: undefined,
         error: null,
