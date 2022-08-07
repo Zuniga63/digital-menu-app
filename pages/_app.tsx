@@ -6,9 +6,11 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { Provider } from 'react-redux';
 import type { AppProps } from 'next/app';
+import rtlCache from 'rtl-cache';
 
 import { MantineProvider } from '@mantine/core';
 import { ToastContainer } from 'react-toastify';
+import LoginModal from 'components/Layouts/LoginModal';
 
 import { useAppDispatch } from 'store/hooks';
 import { SET_USER } from 'store/reducers/Auth/actions';
@@ -33,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <MantineProvider
         withGlobalStyles
         withNormalizeCSS
-        emotionOptions={{ key: 'mantine', prepend: false }}
+        emotionCache={rtlCache}
         theme={{
           /** Put your mantine theme override here */
           colorScheme: 'light',
@@ -55,6 +57,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         draggable
         pauseOnHover
       />
+
+      <LoginModal />
     </Provider>
   );
 }

@@ -71,32 +71,28 @@ export default function OptionSetItemCard({ item, baseUrl, success }: Props) {
   }, [price, published, localItem.price, localItem.published]);
 
   return (
-    <div className="rounded bg-indigo-400 px-4 py-2 shadow-md shadow-gray-400">
-      <div className="mb-2">
-        <NumberInput
-          label={item.optionSetItem.name}
-          placeholder="Ingresa el precio aquí."
-          value={price}
-          onChange={(value) => setPrice(!Number.isNaN(value) ? value : undefined)}
-          hideControls
-          min={100}
-          step={100}
-          parser={currencyParser}
-          size="xs"
-          formatter={currencyFormater}
-          disabled={loading}
-          className="mb-2"
-        />
+    <div className="rounded-md bg-dark px-4 py-3 shadow-md shadow-gray-600">
+      <NumberInput
+        label={<span className="text-sm text-light">{item.optionSetItem.name}</span>}
+        placeholder="Ingresa el precio aquí."
+        value={price}
+        onChange={(value) => setPrice(!Number.isNaN(value) ? value : undefined)}
+        hideControls
+        min={100}
+        step={100}
+        parser={currencyParser}
+        size="xs"
+        formatter={currencyFormater}
+        disabled={loading}
+        className="mb-2"
+      />
+      <div className="flex items-center justify-between">
         <Checkbox
-          label="Publicar"
+          label={<span className="text-light">Publicar</span>}
           checked={published}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setPublished(e.currentTarget.checked)}
           disabled={loading}
         />
-      </div>
-
-      <div className="flex items-center justify-end">
-        {isSuccess && <p className="mr-2 text-xs font-bold text-green-400">¡Item actualizado!</p>}
         <Button
           size="xs"
           loading={loading}
@@ -107,6 +103,7 @@ export default function OptionSetItemCard({ item, baseUrl, success }: Props) {
           Actualizar
         </Button>
       </div>
+      {isSuccess && <p className="mt-2 text-xs font-bold text-green-400">¡Item actualizado!</p>}
     </div>
   );
 }

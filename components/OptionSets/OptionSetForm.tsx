@@ -5,7 +5,7 @@ import axios from 'axios';
 import { IOptionSet } from 'store/reducers/interfaces';
 import { Database, Plus } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
-import { InputWrapper, Input, Checkbox } from '@mantine/core';
+import { Checkbox, TextInput } from '@mantine/core';
 import OptionItemCard from './OptionItemFormCard';
 
 interface Props {
@@ -107,17 +107,16 @@ export default function OptionSetForm({ loading, apiUrl, setLoading, onCloseModa
     >
       <>
         {/* Name */}
-        <InputWrapper id="category-name" required label="Nombre del Set" error={errors?.name?.message}>
-          <Input
-            id="category-name"
-            placeholder="Escribelo aquí."
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            disabled={loading}
-            invalid={errors?.name}
-            required
-          />
-        </InputWrapper>
+        <TextInput
+          id="category-name"
+          label="Nombre del Set"
+          placeholder="Escribelo aquí."
+          value={name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          disabled={loading}
+          required
+          error={errors?.name?.message}
+        />
 
         {/* isEnabled */}
         <Checkbox
@@ -132,14 +131,13 @@ export default function OptionSetForm({ loading, apiUrl, setLoading, onCloseModa
           <h2 className="mb-2 text-center text-lg font-bold tracking-wider text-gray-800">Listado de opciones</h2>
           <div className="mb-4 flex items-center justify-between gap-2 rounded bg-indigo-200 bg-opacity-60 p-3 shadow shadow-indigo-400">
             <div className="flex flex-grow flex-col gap-4">
-              <InputWrapper id="category-name" label="Nombre de la optción">
-                <Input
-                  id="category-name"
-                  placeholder="Escribelo aquí."
-                  value={itemName}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => setItemName(e.target.value)}
-                />
-              </InputWrapper>
+              <TextInput
+                label="Nombre de la optción"
+                id="category-name"
+                placeholder="Escribelo aquí."
+                value={itemName}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setItemName(e.target.value)}
+              />
 
               <Checkbox
                 label="¿Habilitado?"

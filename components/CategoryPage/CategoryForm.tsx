@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { resetStoreState, storeCategory, updateCategory } from 'store/reducers/CategoryReducer/actionCreators';
 
 import Image from 'next/image';
-import { InputWrapper, Input, Textarea, Checkbox } from '@mantine/core';
+import { TextInput, Textarea, Checkbox } from '@mantine/core';
 import { Trash, Database, Edit } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
 import CustomImageDropzone from '../CustomImageDropzone';
@@ -150,23 +150,17 @@ export default function CategoryForm({ onCloseModal }: Props) {
         )}
 
         {/* Name */}
-        <InputWrapper
+        <TextInput
           id="category-name"
+          placeholder="Escribelo aquí."
+          value={name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          disabled={loading}
           required
           label="Nombre"
           description="escriba el nombre de la categoría."
           error={validations?.name?.message}
-        >
-          <Input
-            id="category-name"
-            placeholder="Escribelo aquí."
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            disabled={loading}
-            invalid={validations?.name}
-            required
-          />
-        </InputWrapper>
+        />
 
         {/* Description */}
         <Textarea

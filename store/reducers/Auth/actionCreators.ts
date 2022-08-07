@@ -4,7 +4,7 @@ import { Dispatch } from 'redux';
 import { toast } from 'react-toastify';
 import { actionBody, AppThunkAction } from 'store';
 import { IUser, LoginData } from '../interfaces';
-import { LOGOUT, SET_ERROR, SET_LOADING, SET_USER } from './actions';
+import { CLOSE_LOGIN, LOGOUT, OPEN_LOGIN, SET_ERROR, SET_LOADING, SET_USER } from './actions';
 
 interface AuthResponse {
   ok: boolean;
@@ -15,6 +15,14 @@ interface AuthResponse {
 }
 
 const baseUrl = '/auth/local/signin';
+
+export const openLogin = () => (dispatch: Dispatch) => {
+  return dispatch(actionBody(OPEN_LOGIN));
+};
+
+export const closeLogin = () => (dispatch: Dispatch) => {
+  return dispatch(actionBody(CLOSE_LOGIN));
+};
 
 export const authUser = (loginData: LoginData): AppThunkAction => {
   return async (dispatch) => {
@@ -29,6 +37,10 @@ export const authUser = (loginData: LoginData): AppThunkAction => {
           localStorage.setItem('token', token);
           localStorage.setItem('user', JSON.stringify(user));
         }
+        dispatch(actionBody(SET_LOADING, false));
+        setTimeout(() => {
+          dispatch(actionBody(CLOSE_LOGIN));
+        }, 200);
         toast.success(`Bienvenido ${user?.name}`);
       }
     } catch (error: any) {

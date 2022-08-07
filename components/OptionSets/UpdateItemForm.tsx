@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { IOptionItem } from 'store/reducers/interfaces';
 import { Edit, Trash } from 'tabler-icons-react';
 import CustomForm from 'components/CustomForm';
-import { InputWrapper, Input, Checkbox } from '@mantine/core';
+import { TextInput, Checkbox } from '@mantine/core';
 import CustomImageDropzone from '../CustomImageDropzone';
 
 interface Props {
@@ -127,23 +127,17 @@ export default function UpdateItemForm({ optionSetItem, apiUrl, loading, setLoad
         )}
 
         {/* Name */}
-        <InputWrapper
+        <TextInput
           id="category-name"
-          required
+          placeholder="Escribelo aquí."
+          value={name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          disabled={loading}
           label="Nombre"
           description="escriba el nombre de la categoría."
           error={validations?.name?.message}
-        >
-          <Input
-            id="category-name"
-            placeholder="Escribelo aquí."
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            disabled={loading}
-            invalid={validations?.name}
-            required
-          />
-        </InputWrapper>
+          required
+        />
 
         {/* Is Enabled */}
         <Checkbox

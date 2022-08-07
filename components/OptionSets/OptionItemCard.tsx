@@ -22,7 +22,6 @@ export default function OptionItemCard({ optionSetItem, onUpdateState, onUpdate 
   };
 
   useEffect(() => {
-    console.log('Ejecutado');
     setEnabled(optionSetItem.isEnabled);
   }, [optionSetItem.isEnabled]);
 

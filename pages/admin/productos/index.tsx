@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import type { GetServerSideProps, NextPage } from 'next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   IAllCategoriesResponse,
   IAllOptionsetsResponse,
@@ -20,6 +20,7 @@ import ProductForm from 'components/Products/ProductForm';
 import ProductCard from 'components/Products/ProductCard';
 import UpdateForm from 'components/Products/UpdateForm';
 import OptionSetCard from 'components/Products/OptionSetCard';
+import CategorySelector from 'components/Products/CategorySelector';
 
 interface Props {
   categories: ICategory[];
@@ -71,8 +72,10 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   // STATE
   //-----------------------------------------------------------------
   const [products, setProducts] = useState(productData);
+  const [filterProducts, setFilterProducts] = useState<IProduct[]>([]);
   const [productToUpdate, setProductToUpdate] = useState<IProduct | null>(null);
   const [optionSetToUpdate, setOptionSetToUpdate] = useState<IProductOptionSet | null>(null);
+  const [categoryId, setCategoryId] = useState<string | null>(null);
 
   const [modalOpened, setModalOpened] = useState(false);
   const [storeLoading, setStoreLoading] = useState(false);
@@ -159,6 +162,15 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     setOptionSetUpdated(true);
   };
 
+  useEffect(() => {
+    if (categoryId) {
+      const filter = products.filter((p) => p.category && p.category.id === categoryId);
+      setFilterProducts(filter);
+    } else {
+      setFilterProducts(products);
+    }
+  }, [categoryId]);
+
   //-----------------------------------------------------------------
   // RENDER
   //-----------------------------------------------------------------
@@ -167,8 +179,11 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     <>
       <AdminLayout title="Productos">
         <LayoutHeader>Listado de productos</LayoutHeader>
+
+        <CategorySelector categories={categories} value={categoryId} setValue={setCategoryId} />
+
         <div className="flex flex-col gap-y-4">
-          {products.map((item) => (
+          {filterProducts.map((item) => (
             <ProductCard
               product={item}
               deleteLoading={deleteLoading}
