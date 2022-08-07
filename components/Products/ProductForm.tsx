@@ -3,7 +3,7 @@ import React, { ChangeEvent, Dispatch, FormEvent, SetStateAction, useEffect, use
 import CustomForm from 'components/CustomForm';
 import { Database, Trash } from 'tabler-icons-react';
 import Image from 'next/image';
-import { InputWrapper, Input, Textarea, Checkbox, Select, SelectItem, MultiSelect, NumberInput } from '@mantine/core';
+import { TextInput, Textarea, Checkbox, Select, SelectItem, MultiSelect, NumberInput } from '@mantine/core';
 import CustomImageDropzone from 'components/CustomImageDropzone';
 import { ICategory, IOptionSet } from 'store/reducers/interfaces';
 import { toast } from 'react-toastify';
@@ -147,17 +147,16 @@ export default function ProductForm({
         )}
 
         {/* Name */}
-        <InputWrapper id="category-name" required label="Nombre" error={errors?.name?.message}>
-          <Input
-            id="category-name"
-            placeholder="Escribelo aquí."
-            value={name}
-            onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            disabled={loading}
-            invalid={errors?.name}
-            required
-          />
-        </InputWrapper>
+        <TextInput
+          id="category-name"
+          placeholder="Escribelo aquí."
+          value={name}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+          disabled={loading}
+          label="Nombre"
+          error={errors?.name?.message}
+          required
+        />
 
         {/* Description */}
         <Textarea

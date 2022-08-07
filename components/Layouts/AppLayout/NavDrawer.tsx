@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { Button, Drawer, Modal, InputWrapper, Input, PasswordInput } from '@mantine/core';
+import { Button, Drawer, Modal, TextInput, PasswordInput } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import Image from 'next/image';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
@@ -9,7 +9,7 @@ import { LoginData } from 'store/reducers/interfaces';
 import { authUser, logout } from 'store/reducers/Auth/actionCreators';
 import { toast } from 'react-toastify';
 import Link from 'next/link';
-import Header from './Header';
+import NavDrawerHeader from './NavDraverHeader';
 
 export default function NavDrawer() {
   const [modalOpened, setModalOpened] = useState(false);
@@ -71,7 +71,7 @@ export default function NavDrawer() {
         withCloseButton={false}
       >
         <>
-          <Header />
+          <NavDrawerHeader />
           <div className="flex flex-col items-center p-8">
             <div className="relative mb-4 aspect-square w-1/3 overflow-hidden rounded-full bg-gray-100 shadow-new-tag">
               <div className="w-ful relative flex h-full items-center justify-center text-gray-400 text-opacity-40">
@@ -105,18 +105,18 @@ export default function NavDrawer() {
         <form onSubmit={onSubmitHandled}>
           <h2 className="text-center text-lg font-bold ">Iniciar Sessión</h2>
 
-          <InputWrapper id="username" required label="Email" className="mb-4">
-            <Input
-              id="username"
-              placeholder="Escribelo aquí."
-              value={email}
-              onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-              disabled={loading}
-              required
-              type="email"
-              icon={<At />}
-            />
-          </InputWrapper>
+          <TextInput
+            id="username"
+            placeholder="Escribelo aquí."
+            value={email}
+            onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+            disabled={loading}
+            required
+            label="Email"
+            className="mb-4"
+            type="email"
+            icon={<At />}
+          />
 
           <PasswordInput
             placeholder="********"
