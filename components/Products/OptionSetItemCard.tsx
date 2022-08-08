@@ -78,7 +78,6 @@ export default function OptionSetItemCard({ item, baseUrl, success }: Props) {
         value={price}
         onChange={(value) => setPrice(!Number.isNaN(value) ? value : undefined)}
         hideControls
-        min={100}
         step={100}
         parser={currencyParser}
         size="xs"
