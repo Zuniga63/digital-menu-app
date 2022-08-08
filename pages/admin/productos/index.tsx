@@ -90,11 +90,20 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   //-----------------------------------------------------------------
   // METHODS
   //-----------------------------------------------------------------
+  const updateFilter = (productList: IProduct[] = []) => {
+    if (categoryId) {
+      const filter = productList.filter((p) => p.category && p.category.id === categoryId);
+      setFilterProducts(filter);
+    } else {
+      setFilterProducts(productList);
+    }
+  };
   const getProducts = async (): Promise<void> => {
     try {
       const res = await axios.get(apiUrl);
       if (res.data.ok) {
         setProducts(res.data.products);
+        updateFilter(res.data.products);
       }
     } catch (_error) {
       toast.error('No se pudo recuperar los productos');
@@ -124,6 +133,7 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
   const removeProduct = (id: string): void => {
     const filter = products.filter((item) => item.id !== id);
     setProducts([...filter]);
+    updateFilter(filter);
   };
 
   const deleteProduct = async (id: string): Promise<void> => {
