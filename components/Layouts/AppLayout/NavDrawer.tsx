@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Drawer } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
-import Image from 'next/image';
+import React from 'react';
 import { useAppSelector, useAppDispatch } from 'store/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { hideNavMenu, showMenu } from 'store/reducers/NavMenuReducer/actionCreators';
-import { User } from 'tabler-icons-react';
+import { ICategoryHome } from 'store/reducers/interfaces';
+
+import { Drawer } from '@mantine/core';
+import Image from 'next/image';
 import NavDrawerHeader from './NavDraverHeader';
 
-export default function NavDrawer() {
-  const [avatar, setAvatar] = useState('');
+interface Props {
+  categories: ICategoryHome[];
+}
 
+export default function NavDrawer({ categories }: Props) {
   const { menuIsOpen } = useAppSelector(({ NavMenuReducer }) => NavMenuReducer);
-  const { user, isAuth } = useAppSelector(({ AuthReducer }) => AuthReducer);
   const dispatch = useAppDispatch();
 
   const largeScreen = useMediaQuery('(min-width: 768px)');
@@ -24,26 +26,57 @@ export default function NavDrawer() {
     }
   };
 
-  useEffect(() => {
-    if (isAuth) {
-      const name = user?.name.replaceAll(' ', '+');
-      const url = `https://ui-avatars.com/api/?background=0d6efd&name=${name}`;
-      setAvatar(url);
+  const goToCategory = (categoryId: string) => {
+    const header = document.getElementById('home-header');
+    const content = document.getElementById('home-content');
+    const categoryGroup: HTMLElement | null = document.querySelector(`[data-id="${categoryId}"]`);
+
+    if (header && content && categoryGroup) {
+      const y = categoryGroup.offsetTop - header.offsetHeight;
+      content.scroll(0, y);
     }
-  }, [isAuth]);
+
+    toggle();
+  };
 
   return (
     <Drawer opened={menuIsOpen} onClose={toggle} padding={0} size={largeScreen ? 'md' : '100%'} withCloseButton={false}>
       <>
         <NavDrawerHeader />
-        <div className="flex flex-col items-center p-8">
-          <div className="relative mb-4 aspect-square w-1/3 overflow-hidden rounded-full bg-gray-100 shadow-new-tag">
-            <div className="w-ful relative flex h-full items-center justify-center text-gray-400 text-opacity-40">
-              {!isAuth && <User size={40} />}
-              {isAuth && <Image src={avatar} alt={user?.name} layout="fill" />}
-            </div>
-          </div>
-          {isAuth && <p className="mb-4 text-center font-display font-normal">{user?.name}</p>}
+        <div>
+          <h2 className="mb-4 border-b-4 border-double border-gray-400 py-2 px-4 text-center text-xl uppercase italic">
+            Categorías
+          </h2>
+          <ul className="divide-y divide-gray-200">
+            {categories.map(
+              (category) =>
+                category.isEnabled &&
+                !!category.products.length && (
+                  <li key={category.id} className="block">
+                    <button type="button" onClick={() => goToCategory(category.id)} className="block w-full">
+                      <div className="flex items-center gap-3 p-4 text-dark">
+                        {category.image && (
+                          <figure
+                            className="relative aspect-square w-14 shrink-0 overflow-hidden rounded-full ring-4 ring-gray-400"
+                            role="presentation"
+                          >
+                            <Image src={category.image.url} alt={category.name} layout="fill" />
+                          </figure>
+                        )}
+                        <div className="flex-grow">
+                          <h3 className="font-hand text-xl font-black">{category.name}</h3>
+                          {category.description && (
+                            <p className="mt-2 font-sans text-xs font-medium tracking-wider text-gray-600 line-clamp-2">
+                              {category.description}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  </li>
+                )
+            )}
+          </ul>
         </div>
       </>
     </Drawer>

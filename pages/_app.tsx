@@ -36,7 +36,6 @@ function MyApp({ Component, pageProps }: AppProps) {
       <MantineProvider
         emotionCache={appendCache}
         withGlobalStyles
-        withNormalizeCSS
         theme={{
           /** Put your mantine theme override here */
           colorScheme: 'light',

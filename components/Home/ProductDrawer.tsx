@@ -122,7 +122,7 @@ export default function ProductDrawer() {
                   <header className="rounded-t bg-dark px-6 py-4">
                     <h3 className="text-xl font-bold tracking-wider text-yellow-400">{optionSet.title}</h3>
                   </header>
-                  <ul className="max-h-96 divide-y divide-slate-400 overflow-y-auto rounded-b border-x border-b border-dark bg-gradient-to-br from-slate-900 to-slate-400 py-6 px-2">
+                  <ul className="divide-y divide-slate-400 rounded-b border-x border-b border-dark bg-gradient-to-br from-slate-900 to-slate-400 py-6 px-2">
                     {optionSet.items.map(
                       (item) =>
                         item.published &&

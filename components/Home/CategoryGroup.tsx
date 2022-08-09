@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ICategoryHome, IImage, IProductHome } from 'store/reducers/interfaces';
+import createSlug from 'utils/createSlug';
 
 import Image from 'next/image';
 import ProductCard from './ProductCard';
@@ -18,8 +19,8 @@ export default function CategoryGroup({ category, imagePriority, imageClickHandl
   }, []);
 
   return category.isEnabled && productList.length ? (
-    <section>
-      <header className="flex gap-3 bg-gray-dark p-4 text-gray-100">
+    <section id={createSlug(category.name)} data-id={category.id}>
+      <header className="flex items-start gap-3 bg-gray-dark p-4 text-gray-100">
         {image && (
           <figure
             className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-full ring-4 ring-dark"
