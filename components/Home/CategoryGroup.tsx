@@ -19,7 +19,7 @@ export default function CategoryGroup({ category, imagePriority, imageClickHandl
 
   return category.isEnabled && productList.length ? (
     <section>
-      <header className="flex gap-3 bg-gray-dark p-4 text-gray-100">
+      <header className="flex items-start gap-3 bg-gray-dark p-4 text-gray-100">
         {image && (
           <figure
             className="relative aspect-square w-20 shrink-0 overflow-hidden rounded-full ring-4 ring-dark"
