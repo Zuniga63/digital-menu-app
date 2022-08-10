@@ -192,7 +192,7 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
 
         <CategorySelector categories={categories} value={categoryId} setValue={setCategoryId} />
 
-        <div className="flex flex-col gap-y-4">
+        <div className="grid gap-y-4 lg:grid-cols-3 lg:gap-x-6">
           {filterProducts.map((item) => (
             <ProductCard
               product={item}

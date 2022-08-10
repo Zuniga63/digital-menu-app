@@ -14,6 +14,11 @@ class MyDocument extends Document {
             href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&family=Zen+Dots&display=swap"
             rel="stylesheet"
           />
+          <link
+            rel="shortcut icon"
+            href="https://res.cloudinary.com/dr8snppzz/image/upload/v1660154188/digital-menu/logo_zby22a.png"
+            type="image/x-icon"
+          />
         </Head>
         <body>
           <Main />
