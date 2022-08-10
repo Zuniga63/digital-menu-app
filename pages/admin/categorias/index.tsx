@@ -52,7 +52,7 @@ const CategoriesPage: NextPage = () => {
       <AdminLayout title="Categorías">
         <LayoutHeader>Listado de categorías</LayoutHeader>
 
-        <div className="mb-40 flex flex-col gap-2">
+        <div className="mb-40 grid gap-y-4 lg:grid-cols-3 lg:gap-x-6">
           {(loading || isEmpty) && waiting}
           {!isEmpty &&
             !loading &&

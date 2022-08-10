@@ -141,7 +141,7 @@ const OptionSetsPage: NextPage = () => {
       <AdminLayout title="Categorías">
         <LayoutTitle>Sets de Opciones</LayoutTitle>
 
-        <div className="flex flex-col gap-y-6 px-4">
+        <div className="grid gap-y-4 lg:grid-cols-3 lg:gap-x-6">
           {optionSets.map((item) => (
             <OptionSetCard
               key={item.id}
