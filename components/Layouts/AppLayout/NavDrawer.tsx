@@ -41,8 +41,8 @@ export default function NavDrawer({ categories }: Props) {
 
   return (
     <Drawer opened={menuIsOpen} onClose={toggle} padding={0} size={largeScreen ? 'md' : '100%'} withCloseButton={false}>
+      <NavDrawerHeader />
       <div className="relative h-full overflow-y-auto pb-40">
-        <NavDrawerHeader />
         <h2 className="mb-4 border-b-4 border-double border-gray-400 py-2 px-4 text-center text-xl uppercase italic">
           Categorías
         </h2>
