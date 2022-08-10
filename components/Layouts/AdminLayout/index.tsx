@@ -18,7 +18,6 @@ export default function AdminLayout({ title, children }: ILayoutProps) {
         <div className="relative h-full overflow-y-auto bg-gray-100">
           <Head>
             <title>{TITLE}</title>
-            <link rel="icon" href="/favicon.ico" />
           </Head>
 
           <Header />

@@ -20,7 +20,6 @@ export default function index({ title, children, categories }: ILayoutProps) {
         <div className="body relative h-full overflow-y-auto" id="home-content">
           <Head>
             <title>{TITLE}</title>
-            <link rel="icon" href="/favicon.ico" />
           </Head>
 
           <Header />
