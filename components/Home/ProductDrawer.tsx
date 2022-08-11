@@ -32,9 +32,11 @@ export default function ProductDrawer() {
   //-------------------------------------------------------
 
   useEffect(() => {
+    // Set Image
     if (product?.image) setImage(product.image);
     else setImage(undefined);
 
+    // Set Discount
     if (product?.hasDiscount && product.price && product.priceWithDiscount) {
       const fraction = 1 - product.priceWithDiscount / product.price;
       const percentage = fraction * 100;
@@ -60,6 +62,8 @@ export default function ProductDrawer() {
       });
 
       setOptionSets(setList);
+    } else {
+      setOptionSets([]);
     }
   }, [product]);
 
@@ -142,17 +146,20 @@ export default function ProductDrawer() {
                               </figure>
                               <div className="flex-grow">
                                 <p className="font-display text-sm text-yellow-400">{item.optionSetItem.name}</p>
-                                {hasDiscount && (
-                                  <p className="mb-1 text-xs text-gray-200">
-                                    antes{' '}
-                                    <span className="text-light text-opacity-50 line-through">
-                                      {currencyFormat((product?.price || 0) + (item.price || 0))}
-                                    </span>
-                                  </p>
+
+                                {item.price && (
+                                  <>
+                                    {hasDiscount && (
+                                      <p className="mb-1 text-xs text-gray-200">
+                                        antes{' '}
+                                        <span className="text-light text-opacity-50 line-through">
+                                          {currencyFormat((product?.price || 0) + (item.price || 0))}
+                                        </span>
+                                      </p>
+                                    )}
+                                    <p className="text-sm font-bold text-light">{currencyFormat(base + item.price)}</p>
+                                  </>
                                 )}
-                                <p className="text-sm font-bold text-light">
-                                  {currencyFormat(base + (item.price || 0))}
-                                </p>
                               </div>
                             </div>
                           </li>

@@ -8,7 +8,7 @@ interface IBrandLogoProps {
 export default function BrandLogo({ onClick }: IBrandLogoProps) {
   return (
     <Link href="/" passHref>
-      <a href="" className="relative block w-16 overflow-hidden" onClick={onClick}>
+      <a href="" className="relative block w-14 overflow-hidden" onClick={onClick}>
         <Image
           src="https://res.cloudinary.com/dr8snppzz/image/upload/v1660154188/digital-menu/logo_zby22a.png"
           alt="Digital Menu"

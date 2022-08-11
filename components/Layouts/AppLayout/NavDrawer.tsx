@@ -44,8 +44,8 @@ export default function NavDrawer({ categories }: Props) {
       <>
         <NavDrawerHeader />
         <div className="relative h-full overflow-y-auto pb-40">
-          <h2 className="mb-4 border-b-4 border-double border-gray-400 py-2 px-4 text-center text-xl uppercase italic">
-            Categorías
+          <h2 className="border-b-4 border-double border-gray-400 py-2 px-4 text-center font-hand text-3xl text-dark">
+            Nuestro Menú
           </h2>
           <ul className="divide-y divide-gray-200">
             {categories.map(

@@ -11,6 +11,7 @@ import CategoryList from 'components/Home/CategoryList';
 import ProductDrawer from 'components/Home/ProductDrawer';
 import { Modal } from '@mantine/core';
 import Image from 'next/image';
+import { showMenu } from 'store/reducers/NavMenuReducer/actionCreators';
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const api = process.env.NEXT_PUBLIC_URL_API;
@@ -66,6 +67,13 @@ const Home: NextPage<Props> = ({ categories }: Props) => {
   //-----------------------------------------------------------------------
   // USE EFECCTS
   //-----------------------------------------------------------------------
+  useEffect(() => {
+    if (firtsTime) {
+      setTimeout(() => {
+        dispatch(showMenu());
+      }, 2000);
+    }
+  }, []);
 
   useEffect(() => {
     // Se agrega un primer push para que el router funcione
