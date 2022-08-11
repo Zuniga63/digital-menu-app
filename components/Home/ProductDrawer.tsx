@@ -60,6 +60,8 @@ export default function ProductDrawer() {
       });
 
       setOptionSets(setList);
+    } else {
+      setOptionSets([]);
     }
   }, [product]);
 
