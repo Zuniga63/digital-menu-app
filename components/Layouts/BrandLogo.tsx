@@ -10,7 +10,7 @@ export default function BrandLogo({ onClick }: IBrandLogoProps) {
     <Link href="/" passHref>
       <a href="" className="relative block w-14 overflow-hidden" onClick={onClick}>
         <Image
-          src="https://res.cloudinary.com/dr8snppzz/image/upload/v1660154188/digital-menu/logo_zby22a.png"
+          src={process.env.NEXT_PUBLIC_LOGO_URL || ''}
           alt="Digital Menu"
           width={640}
           height={640}
