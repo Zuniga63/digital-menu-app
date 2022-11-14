@@ -12,7 +12,7 @@ export default function BrandName({ onClick }: IBrandNameProps) {
         className="m-0 block text-center font-display text-lg capitalize tracking-widest no-underline"
         onClick={onClick}
       >
-        SD4
+        {process.env.NEXT_PUBLIC_APP_NAME || 'Digital'}
       </a>
     </Link>
   );
