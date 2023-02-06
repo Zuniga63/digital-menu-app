@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import type { GetServerSideProps, NextPage } from 'next';
+import type { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import {
   IAllCategoriesResponse,
@@ -22,56 +22,14 @@ import UpdateForm from 'components/Products/UpdateForm';
 import OptionSetCard from 'components/Products/OptionSetCard';
 import CategorySelector from 'components/Products/CategorySelector';
 
-interface Props {
-  categories: ICategory[];
-  optionSets: IOptionSet[];
-  products: IProduct[];
-}
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const api = process.env.NEXT_PUBLIC_URL_API;
-  const categories: ICategory[] = [];
-  const optionSets: IOptionSet[] = [];
-  const products: IProduct[] = [];
-
-  try {
-    const categoryRes = await fetch(`${api}/product-categories`);
-    const categoryData: IAllCategoriesResponse = await categoryRes.json();
-    if (categoryData.ok) {
-      categories.push(...categoryData.categories);
-    }
-
-    const optionSetsRes = await fetch(`${api}/option-sets`);
-    const optionSetsData: IAllOptionsetsResponse = await optionSetsRes.json();
-    if (optionSetsData.ok) {
-      optionSets.push(...optionSetsData.optionSets);
-    }
-
-    const productsRes = await fetch(`${api}/products`);
-    const productData: IAllProductsResponse = await productsRes.json();
-    if (productData.ok) {
-      products.push(...productData.products);
-    }
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(error);
-  }
-
-  return {
-    props: {
-      categories,
-      optionSets,
-      products,
-    },
-  };
-};
-
-const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: productData }: Props) => {
+const ProductsPage: NextPage = () => {
   const apiUrl = '/products';
   //-----------------------------------------------------------------
   // STATE
   //-----------------------------------------------------------------
-  const [products, setProducts] = useState(productData);
+  const [products, setProducts] = useState<IProduct[]>([]);
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [optionSets, setOptionSets] = useState<IOptionSet[]>([]);
   const [filterProducts, setFilterProducts] = useState<IProduct[]>([]);
   const [productToUpdate, setProductToUpdate] = useState<IProduct | null>(null);
   const [optionSetToUpdate, setOptionSetToUpdate] = useState<IProductOptionSet | null>(null);
@@ -107,6 +65,29 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
       }
     } catch (_error) {
       toast.error('No se pudo recuperar los productos');
+    }
+  };
+
+  const fetchData = async (): Promise<void> => {
+    const api = process.env.NEXT_PUBLIC_URL_API;
+
+    const [categoryResponse, optionSetResponse, productResponse] = await Promise.all([
+      axios.get<IAllCategoriesResponse>(`${api}/product-categories`),
+      axios.get<IAllOptionsetsResponse>(`${api}/option-sets`),
+      axios.get<IAllProductsResponse>(`${api}/products`),
+    ]);
+
+    if (categoryResponse && categoryResponse.data) {
+      setCategories(categoryResponse.data.categories);
+    }
+
+    if (optionSetResponse && optionSetResponse.data && optionSetResponse.data.ok) {
+      setOptionSets(optionSetResponse.data.optionSets);
+    }
+
+    if (productResponse && productResponse.data && productResponse.data.ok) {
+      setProducts(productResponse.data.products);
+      updateFilter(productResponse.data.products);
     }
   };
 
@@ -181,6 +162,10 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
     }
   }, [categoryId]);
 
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   //-----------------------------------------------------------------
   // RENDER
   //-----------------------------------------------------------------
@@ -204,6 +189,8 @@ const ProductsPage: NextPage<Props> = ({ categories, optionSets, products: produ
             />
           ))}
         </div>
+
+        <div>{products.length}</div>
       </AdminLayout>
 
       <Modal opened={modalOpened} onClose={closeModal}>

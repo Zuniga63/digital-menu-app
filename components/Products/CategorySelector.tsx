@@ -43,7 +43,7 @@ export default function CategorySelector({ categories, value, setValue }: Props)
         };
       })
     );
-  }, []);
+  }, [categories]);
 
   return (
     <div className="mb-4 px-2">
